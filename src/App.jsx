@@ -182,11 +182,11 @@ function App() {
             <div className="paper-card center">
               <h2 className="gold-title">Con la bendicion de nuestros padres</h2>
               <h3 className="script-text small">Padres de la novia</h3>
-              <p>Kattia Gamboa</p>
-              <p>Alexander Alpízar</p>
+              <p>Kattia Gamboa Prado</p>
+              <p>Alexander Alpízar Lobo</p>
               <h3 className="script-text small">Padres del novio</h3>
-              <p>Tania Guerra</p>
-              <p>Enrique Cena</p>
+              <p>Maria del Carmen Gonzalez Acosta</p>
+              <p>Marco Antonio Mora Moreno</p>
             </div>
           </div>
         </section>
