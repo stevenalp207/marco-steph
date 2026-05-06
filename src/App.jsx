@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import './App.css'
+import { isSupabaseConfigured, saveRsvpResponse } from './lib/supabaseClient'
+import { guestReservations, makeReservationKey, normalizeText } from './data/reservations'
 
 const weddingDate = new Date('2026-11-21T16:00:00-06:00')
 
@@ -43,45 +45,6 @@ const timeline = [
   },
 ]
 
-const guestReservations = [
-  { reservation: 'Gamboa', name: 'Kattia Gamboa', passes: 1 },
-  { reservation: 'Alpizar', name: 'Alexander Alpizar', passes: 1 },
-  { reservation: 'Alpizar', name: 'Steven Alpizar', passes: 1 },
-  { reservation: 'Alpizar', name: 'Natalia Alpizar', passes: 1 },
-  { reservation: 'Tony', name: 'Tony', passes: 1 },
-  { reservation: 'Prado', name: 'Maria Prado', passes: 1 },
-  { reservation: 'Valverde', name: 'Michael Valverde', passes: 1 },
-  { reservation: 'Valverde', name: 'John Valverde', passes: 2 },
-  { reservation: 'Giaccone', name: 'Romina Giaccone', passes: 1 },
-  { reservation: 'Munguia', name: 'Hector Munguia', passes: 1 },
-  { reservation: 'Badilla', name: 'Maria Badilla y Evaristo Mora', passes: 2 },
-  { reservation: 'Acuña', name: 'Julissa Acuña y Natalia Castro', passes: 2 },
-  { reservation: 'Solano', name: 'Kendall Solano', passes: 1 },
-  { reservation: 'Campos', name: 'Moises Campos', passes: 1 },
-  { reservation: 'Lopez', name: 'Brian Lopez', passes: 1 },
-  { reservation: 'Mendez', name: 'Heiner Mendez', passes: 1 },
-  { reservation: 'Badilla', name: 'Luis Diego Badilla', passes: 1 },
-  { reservation: 'Garcia', name: 'Diego Garcia', passes: 2 },
-  { reservation: 'Covarrubias', name: 'Nabor Covarrubias', passes: 2 },
-  { reservation: 'Rivera', name: 'Daniela Rivera y Erick Bolaños', passes: 2  },
-  { reservation: 'Rangel', name: 'Roger Rangel', passes: 1 },
-  { reservation: 'Lozano', name: 'Jenny Lozano', passes: 2 },
-  { reservation: 'Orcasitas', name: 'Oscar Orcasitas', passes: 2 },
-  { reservation: 'Alvarez', name: 'Jose Luis Alvarez', passes: 1 },
-  { reservation: 'Villasana', name: 'Juan Villasana', passes: 1 },
-  { reservation: 'Cascante', name: 'Marco Cascante', passes: 1 },
-  { reservation: 'Castro', name: 'Francisco Castro', passes: 1 },
-  { reservation: 'Leon', name: 'Daniel Leon', passes: 1 },
-]
-
-function normalizeText(value) {
-  return value
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .trim()
-}
-
 function getCountdown() {
   const diff = weddingDate.getTime() - Date.now()
 
@@ -101,8 +64,16 @@ function getCountdown() {
 function App() {
   const [countdown, setCountdown] = useState(getCountdown)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isRsvpModalOpen, setIsRsvpModalOpen] = useState(false)
   const [guestInput, setGuestInput] = useState('')
   const [guestLookup, setGuestLookup] = useState('')
+  const [selectedGuestKey, setSelectedGuestKey] = useState('')
+  const [attendanceStatus, setAttendanceStatus] = useState('si')
+  const [companionCount, setCompanionCount] = useState('0')
+  const [contactPhone, setContactPhone] = useState('')
+  const [rsvpComment, setRsvpComment] = useState('')
+  const [isSubmittingRsvp, setIsSubmittingRsvp] = useState(false)
+  const [rsvpMessage, setRsvpMessage] = useState({ type: '', text: '' })
 
   const normalizedGuestLookup = normalizeText(guestLookup)
   const guestResults = normalizedGuestLookup
@@ -112,6 +83,12 @@ function App() {
           normalizeText(reservation.name).includes(normalizedGuestLookup),
       )
     : []
+
+  const selectedGuest = guestResults.find(
+    (reservation) => makeReservationKey(reservation.reservation, reservation.name) === selectedGuestKey,
+  )
+  const maxCompanions = selectedGuest?.passes ?? 0
+  const companionOptions = Array.from({ length: maxCompanions + 1 }, (_, index) => String(index))
 
   useEffect(() => {
     const intervalId = window.setInterval(() => {
@@ -125,6 +102,7 @@ function App() {
     function handleEscape(event) {
       if (event.key === 'Escape') {
         setIsMenuOpen(false)
+        setIsRsvpModalOpen(false)
       }
     }
 
@@ -132,9 +110,109 @@ function App() {
     return () => window.removeEventListener('keydown', handleEscape)
   }, [])
 
+  useEffect(() => {
+    document.body.style.overflow = isRsvpModalOpen ? 'hidden' : ''
+
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [isRsvpModalOpen])
+
+  useEffect(() => {
+    if (!guestResults.length) {
+      setSelectedGuestKey('')
+      return
+    }
+
+    const hasSelectedGuest = guestResults.some(
+      (reservation) => makeReservationKey(reservation.reservation, reservation.name) === selectedGuestKey,
+    )
+
+    if (!hasSelectedGuest) {
+      const firstMatch = guestResults[0]
+      setSelectedGuestKey(makeReservationKey(firstMatch.reservation, firstMatch.name))
+    }
+  }, [guestResults, selectedGuestKey])
+
+  useEffect(() => {
+    if (attendanceStatus === 'no') {
+      if (companionCount !== '0') {
+        setCompanionCount('0')
+      }
+      return
+    }
+
+    if (!selectedGuest) {
+      setCompanionCount('0')
+      return
+    }
+
+    if (Number(companionCount) > selectedGuest.passes) {
+      setCompanionCount(String(selectedGuest.passes))
+    }
+  }, [attendanceStatus, companionCount, selectedGuest])
+
   function handleGuestSearch(event) {
     event.preventDefault()
     setGuestLookup(guestInput)
+    setRsvpMessage({ type: '', text: '' })
+  }
+
+  function openRsvpModal() {
+    setRsvpMessage({ type: '', text: '' })
+    setIsRsvpModalOpen(true)
+  }
+
+  function closeRsvpModal() {
+    setIsRsvpModalOpen(false)
+  }
+
+  async function handleRsvpSubmit(event) {
+    event.preventDefault()
+
+    if (!selectedGuest) {
+      setRsvpMessage({
+        type: 'error',
+        text: 'Primero busca y selecciona tu reserva para confirmar asistencia.',
+      })
+      return
+    }
+
+    setIsSubmittingRsvp(true)
+    setRsvpMessage({ type: '', text: '' })
+
+    try {
+      await saveRsvpResponse({
+        reservation_name: selectedGuest.reservation,
+        guest_name: selectedGuest.name,
+        passes_assigned: selectedGuest.passes,
+        attendance_status: attendanceStatus,
+        companions_confirmed: attendanceStatus === 'si' ? Number(companionCount) : 0,
+        contact_phone: contactPhone.trim() || null,
+        notes: rsvpComment.trim() || null,
+        responded_at: new Date().toISOString(),
+      })
+
+      setRsvpMessage({
+        type: 'success',
+        text: 'Tu respuesta fue registrada. Gracias por confirmar.',
+      })
+      closeRsvpModal()
+    } catch (error) {
+      const status = error?.status ?? error?.code
+      const isUnauthorized = status === 401 || status === '401'
+
+      setRsvpMessage({
+        type: 'error',
+        text: !isSupabaseConfigured
+          ? 'Falta configurar Supabase para guardar las confirmaciones.'
+          : isUnauthorized
+            ? 'Error 401: revisa ANON key y vuelve a ejecutar rsvp_schema.sql en Supabase.'
+            : `No se pudo guardar la confirmacion: ${error?.message ?? 'intenta de nuevo.'}`,
+      })
+    } finally {
+      setIsSubmittingRsvp(false)
+    }
   }
 
   return (
@@ -230,9 +308,9 @@ function App() {
               ) : null}
             </div>
 
-            <a href="#confirmar" className="button button-primary">
+            <button type="button" onClick={openRsvpModal} className="button button-primary">
               Confirmar asistencia
-            </a>
+            </button>
           </div>
         </section>
 
@@ -269,6 +347,7 @@ function App() {
             >
               Agregar a calendario
             </a>
+
           </div>
         </section>
 
@@ -532,6 +611,109 @@ function App() {
       <footer className="wedding-footer">
         <p>Boda Marco y Stephanie</p>
       </footer>
+
+      {isRsvpModalOpen ? (
+        <div className="rsvp-modal" role="dialog" aria-modal="true" aria-labelledby="rsvp-modal-title">
+          <div className="rsvp-modal-backdrop" onClick={closeRsvpModal} aria-hidden="true" />
+
+          <div className="rsvp-modal-content">
+            <button type="button" className="rsvp-modal-close" onClick={closeRsvpModal} aria-label="Cerrar modal">
+              x
+            </button>
+
+            <form className="rsvp-box" onSubmit={handleRsvpSubmit}>
+              <h3 id="rsvp-modal-title">Confirma tu asistencia</h3>
+
+              <label htmlFor="rsvp-guest">Invitado</label>
+              <select
+                id="rsvp-guest"
+                value={selectedGuestKey}
+                onChange={(event) => setSelectedGuestKey(event.target.value)}
+              >
+                {!guestResults.length ? (
+                  <option value="">Busca tu reserva arriba para seleccionar tu nombre</option>
+                ) : (
+                  guestResults.map((reservation) => {
+                    const key = makeReservationKey(reservation.reservation, reservation.name)
+
+                    return (
+                      <option key={key} value={key}>
+                        {reservation.name} ({reservation.passes} {reservation.passes === 1 ? 'pase' : 'pases'})
+                      </option>
+                    )
+                  })
+                )}
+              </select>
+
+              <div className="rsvp-grid">
+                <div>
+                  <label htmlFor="rsvp-status">Asistencia</label>
+                  <select
+                    id="rsvp-status"
+                    value={attendanceStatus}
+                    onChange={(event) => setAttendanceStatus(event.target.value)}
+                  >
+                    <option value="si">Si, asistire</option>
+                    <option value="no">No podre asistir</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label htmlFor="rsvp-companions">Pases a confirmar</label>
+                  <select
+                    id="rsvp-companions"
+                    value={companionCount}
+                    onChange={(event) => setCompanionCount(event.target.value)}
+                    disabled={!selectedGuest || attendanceStatus === 'no'}
+                  >
+                    {companionOptions.map((value) => (
+                      <option key={value} value={value}>
+                        {value}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {selectedGuest ? (
+                <p className="rsvp-helper-text">
+                  Tu reserva permite hasta {selectedGuest.passes} {selectedGuest.passes === 1 ? 'pase' : 'pases'}.
+                </p>
+              ) : (
+                <p className="rsvp-helper-text">Primero busca tu reserva para habilitar los pases disponibles.</p>
+              )}
+
+              <label htmlFor="rsvp-phone">Telefono (opcional)</label>
+              <input
+                id="rsvp-phone"
+                type="tel"
+                value={contactPhone}
+                onChange={(event) => setContactPhone(event.target.value)}
+                placeholder="Ejemplo: 4421234567"
+              />
+
+              <label htmlFor="rsvp-comment">Comentario (opcional)</label>
+              <textarea
+                id="rsvp-comment"
+                value={rsvpComment}
+                onChange={(event) => setRsvpComment(event.target.value)}
+                rows={3}
+                placeholder="Alergias, dudas o mensaje para los novios"
+              />
+
+              <button className="button button-primary" type="submit" disabled={isSubmittingRsvp}>
+                {isSubmittingRsvp ? 'Guardando...' : 'Guardar respuesta'}
+              </button>
+
+              {rsvpMessage.text ? (
+                <p className={`rsvp-feedback ${rsvpMessage.type === 'error' ? 'error' : 'success'}`}>
+                  {rsvpMessage.text}
+                </p>
+              ) : null}
+            </form>
+          </div>
+        </div>
+      ) : null}
     </>
   )
 }
