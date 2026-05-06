@@ -11,9 +11,8 @@ const navItems = [
   { href: '#historia', label: 'Nuestra Historia' },
   { href: '#regalos', label: 'Mesa de regalos' },
   { href: '#dresscode', label: 'Codigo de vestimenta' },
-  { href: '#deseos', label: 'Buenos deseos' },
+  { href: '#hospedaje', label: 'Hospedaje' },
   { href: '#galeria', label: 'Galeria' },
-  { href: '#canciones', label: 'Sugerencia de canciones' },
   { href: '#contactos', label: 'Contactos' },
 ]
 
@@ -44,6 +43,45 @@ const timeline = [
   },
 ]
 
+const guestReservations = [
+  { reservation: 'Gamboa', name: 'Kattia Gamboa', passes: 1 },
+  { reservation: 'Alpizar', name: 'Alexander Alpizar', passes: 1 },
+  { reservation: 'Alpizar', name: 'Steven Alpizar', passes: 1 },
+  { reservation: 'Alpizar', name: 'Natalia Alpizar', passes: 1 },
+  { reservation: 'Tony', name: 'Tony', passes: 1 },
+  { reservation: 'Prado', name: 'Maria Prado', passes: 1 },
+  { reservation: 'Valverde', name: 'Michael Valverde', passes: 1 },
+  { reservation: 'Valverde', name: 'John Valverde', passes: 2 },
+  { reservation: 'Giaccone', name: 'Romina Giaccone', passes: 1 },
+  { reservation: 'Munguia', name: 'Hector Munguia', passes: 1 },
+  { reservation: 'Badilla', name: 'Maria Badilla y Evaristo Mora', passes: 2 },
+  { reservation: 'Acuña', name: 'Julissa Acuña y Natalia Castro', passes: 2 },
+  { reservation: 'Solano', name: 'Kendall Solano', passes: 1 },
+  { reservation: 'Campos', name: 'Moises Campos', passes: 1 },
+  { reservation: 'Lopez', name: 'Brian Lopez', passes: 1 },
+  { reservation: 'Mendez', name: 'Heiner Mendez', passes: 1 },
+  { reservation: 'Badilla', name: 'Luis Diego Badilla', passes: 1 },
+  { reservation: 'Garcia', name: 'Diego Garcia', passes: 2 },
+  { reservation: 'Covarrubias', name: 'Nabor Covarrubias', passes: 2 },
+  { reservation: 'Rivera', name: 'Daniela Rivera y Erick Bolaños', passes: 2  },
+  { reservation: 'Rangel', name: 'Roger Rangel', passes: 1 },
+  { reservation: 'Lozano', name: 'Jenny Lozano', passes: 2 },
+  { reservation: 'Orcasitas', name: 'Oscar Orcasitas', passes: 2 },
+  { reservation: 'Alvarez', name: 'Jose Luis Alvarez', passes: 1 },
+  { reservation: 'Villasana', name: 'Juan Villasana', passes: 1 },
+  { reservation: 'Cascante', name: 'Marco Cascante', passes: 1 },
+  { reservation: 'Castro', name: 'Francisco Castro', passes: 1 },
+  { reservation: 'Leon', name: 'Daniel Leon', passes: 1 },
+]
+
+function normalizeText(value) {
+  return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim()
+}
+
 function getCountdown() {
   const diff = weddingDate.getTime() - Date.now()
 
@@ -63,6 +101,17 @@ function getCountdown() {
 function App() {
   const [countdown, setCountdown] = useState(getCountdown)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [guestInput, setGuestInput] = useState('')
+  const [guestLookup, setGuestLookup] = useState('')
+
+  const normalizedGuestLookup = normalizeText(guestLookup)
+  const guestResults = normalizedGuestLookup
+    ? guestReservations.filter(
+        (reservation) =>
+          normalizeText(reservation.reservation).includes(normalizedGuestLookup) ||
+          normalizeText(reservation.name).includes(normalizedGuestLookup),
+      )
+    : []
 
   useEffect(() => {
     const intervalId = window.setInterval(() => {
@@ -83,26 +132,27 @@ function App() {
     return () => window.removeEventListener('keydown', handleEscape)
   }, [])
 
+  function handleGuestSearch(event) {
+    event.preventDefault()
+    setGuestLookup(guestInput)
+  }
+
   return (
     <>
+      <button
+        type="button"
+        className="menu-toggle"
+        aria-label={isMenuOpen ? 'Cerrar menu' : 'Abrir menu'}
+        aria-expanded={isMenuOpen}
+        aria-controls="main-menu"
+        onClick={() => setIsMenuOpen((value) => !value)}
+      >
+        <span className="menu-toggle-line" />
+        <span className="menu-toggle-line" />
+        <span className="menu-toggle-line" />
+      </button>
+
       <header className="wedding-header">
-        <div className="header-top">
-          <a href="#inicio" className="brand-mark">
-            Marco &amp; Stephanie
-          </a>
-          <button
-            type="button"
-            className="menu-toggle"
-            aria-label={isMenuOpen ? 'Cerrar menu' : 'Abrir menu'}
-            aria-expanded={isMenuOpen}
-            aria-controls="main-menu"
-            onClick={() => setIsMenuOpen((value) => !value)}
-          >
-            <span className="menu-toggle-line" />
-            <span className="menu-toggle-line" />
-            <span className="menu-toggle-line" />
-          </button>
-        </div>
         <nav
           id="main-menu"
           className={`wedding-nav ${isMenuOpen ? 'open' : ''}`}
@@ -125,12 +175,59 @@ function App() {
             <p className="lead">Es un placer invitarlos</p>
 
             <div className="guest-box">
-              <p>Aqui va el nombre de tus invitados</p>
-              <p>Aqui va el mensaje a tus invitados</p>
-              <div className="passes-row">
-                <span className="passes-number">0</span>
-                <span>Pases</span>
-              </div>
+              <form className="grid gap-3" onSubmit={handleGuestSearch}>
+                <label htmlFor="guest-reservation" className="text-xs uppercase tracking-[0.2em] text-white/75">
+                  Nombre de la reserva
+                </label>
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  <input
+                    id="guest-reservation"
+                    value={guestInput}
+                    onChange={(event) => setGuestInput(event.target.value)}
+                    placeholder="Escribe tu apellido"
+                    className="w-full rounded-md border border-white/25 bg-black/20 px-4 py-3 text-center text-white outline-none transition placeholder:text-white/55 focus:border-[var(--gold)] focus:bg-black/30"
+                    autoComplete="off"
+                  />
+                  <button
+                    type="submit"
+                    className="button button-primary min-w-[150px] whitespace-nowrap"
+                  >
+                    Buscar
+                  </button>
+                </div>
+              </form>
+
+              <p className="text-sm text-white/75">
+                Busca por apellido o nombre de reserva. Si tu reserva incluye esposa o esposo, aparecerá con 2 pases.
+              </p>
+
+              {guestLookup ? (
+                guestResults.length > 0 ? (
+                  <div className="grid gap-3">
+                    {guestResults.map((reservation) => (
+                      <div
+                        key={`${reservation.reservation}-${reservation.name}`}
+                        className="grid gap-3 rounded-[0.7rem] border border-white/20 bg-black/25 p-4 text-white sm:grid-cols-[1fr_auto] sm:items-center"
+                      >
+                        <div>
+                          <p className="text-lg font-medium">{reservation.name}</p>
+                          <p className="text-sm text-white/70">Reserva: {reservation.reservation}</p>
+                        </div>
+                        <div className="text-center">
+                          <p className="text-3xl font-semibold">{reservation.passes}</p>
+                          <p className="text-xs uppercase tracking-[0.2em] text-white/70">
+                            {reservation.passes === 1 ? 'Pase' : 'Pases'}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="rounded-[0.7rem] border border-white/20 bg-black/25 px-4 py-4 text-white">
+                    No encontramos una reserva con ese apellido.
+                  </div>
+                )
+              ) : null}
             </div>
 
             <a href="#confirmar" className="button button-primary">
@@ -246,6 +343,52 @@ function App() {
           </div>
         </section>
 
+        <section
+          id="hospedaje"
+          className="reveal bg-[radial-gradient(circle_at_15%_20%,rgba(255,255,255,0.6),transparent_42%),radial-gradient(circle_at_85%_80%,rgba(191,163,123,0.2),transparent_35%),linear-gradient(180deg,#f7f2e9,#f1e8d7)] px-4 py-16"
+        >
+          <div className="mx-auto flex max-w-6xl flex-col items-center text-center">
+            <h2 className="text-[clamp(1.9rem,4.4vw,3rem)] uppercase tracking-[0.08em] text-[var(--gold)]">
+              Hospedaje
+            </h2>
+            <p className="mt-3 w-full max-w-3xl text-balance leading-7 text-[var(--paper-text)]">
+              Conoce las opciones de alojamiento disponibles para ti y tus acompañantes.
+            </p>
+          </div>
+
+          <div className="mx-auto mt-10 grid max-w-6xl gap-8 lg:grid-cols-2">
+            <div className="border border-[var(--paper-border)] bg-[var(--paper-bg)] p-8 text-center shadow-[0_18px_28px_-20px_rgba(50,38,23,0.35)] transition-transform duration-300 hover:-translate-y-2">
+              <h3 className="script-text mb-4">Hacienda Lagunillas</h3>
+              <a
+                className="grid gap-3 text-[var(--gold)] no-underline transition-transform duration-300 hover:-translate-y-1"
+                href="/info-hacienda.jpeg"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Abrir informacion completa de Hacienda Lagunillas"
+              >
+                <div
+                  className="h-[350px] border border-[var(--paper-border)] bg-[rgba(255,255,255,0.7)] bg-contain bg-center bg-no-repeat"
+                  style={{ backgroundImage: "url('/info-hacienda.jpeg')" }}
+                />
+                <span className="text-sm uppercase tracking-[0.08em] font-[var(--heading)]">Ver info completa</span>
+              </a>
+            </div>
+
+            <div className="border border-[var(--paper-border)] bg-[var(--paper-bg)] p-8 text-center shadow-[0_18px_28px_-20px_rgba(50,38,23,0.35)] transition-transform duration-300 hover:-translate-y-2">
+              <h3 className="script-text mb-2">HS Hotsson Hotel</h3>
+              <p className="mb-3 uppercase tracking-[0.08em] text-[var(--gold)]">Reservaciones</p>
+              <p className="mx-auto max-w-xl leading-7 text-[var(--paper-text)]">
+                Nuestra oficina central de reservaciones está disponible de lunes a viernes de 08:00 a 20:00 hrs,
+                sábados y domingos de 08:00 a 17:00 hrs.
+              </p>
+              <div className="mt-6 border-t border-[var(--paper-border)] pt-6 text-left text-[var(--paper-text)]">
+                <p className="my-2"><strong>Email:</strong> central_reservaciones@capitali.com</p>
+                <p className="my-2"><strong>Email:</strong> jdiaz@hotsson.com</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section id="historia" className="paper-wrap reveal">
           <article className="history-card">
             <div>
@@ -290,30 +433,17 @@ function App() {
           </details>
         </section>
 
-        <section id="dresscode" className="paper-wrap reveal">
-          <article className="dress-layout">
-            <div>
-              <h2 className="script-text">Codigo de Vestimenta</h2>
-              <p className="gold-title">Formal</p>
-              <p>Hombres: Traje completo</p>
-              <p>Mujeres: Vestido largo</p>
-
-              <h3 className="script-text">Paleta de colores</h3>
-              <div className="palette-row" aria-label="Paleta de colores sugerida">
-                {palette.map((color) => (
-                  <span
-                    key={color}
-                    className="swatch"
-                    style={{ backgroundColor: color }}
-                    title={color}
-                  />
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <h3 className="script-text">Inspiracion</h3>
-              <div className="inspo-card" aria-hidden="true" />
+        <section id="dresscode" className="reveal bg-[var(--gold-bg)] px-4 py-12">
+          <article className="mx-auto flex max-w-6xl flex-col items-center gap-6 border border-[var(--paper-border)] bg-[var(--paper-bg)] p-8 text-center shadow-[0_18px_28px_-20px_rgba(50,38,23,0.35)]">
+            <h2 className="dresscode-title text-[clamp(1.8rem,4.6vw,3.6rem)] italic text-[var(--paper-text-dark)]">
+              Codigo de Vestimenta
+            </h2>
+            <div className="w-full">
+              <img
+                className="mx-auto block h-auto w-full max-w-[920px] rounded-[0.6rem] border border-[var(--paper-border)] bg-white object-contain shadow-[0_12px_30px_rgba(0,0,0,0.08)]"
+                src="/dress-code.png"
+                alt="Dress code"
+              />
             </div>
           </article>
         </section>
@@ -332,22 +462,6 @@ function App() {
           </article>
         </section>
 
-        <section id="deseos" className="panel reveal">
-          <h2>Buenos Deseos</h2>
-          <blockquote>
-            Que Dios los colme de bendiciones y los guie en este nuevo camino
-            juntos. Les deseamos toda la felicidad del universo.
-            <cite>Norma Alvarez Ojeda</cite>
-          </blockquote>
-          <form className="mini-form" onSubmit={(event) => event.preventDefault()}>
-            <input type="text" placeholder="Tu nombre" required />
-            <textarea rows={4} placeholder="Escribe tus buenos deseos" required />
-            <button className="button button-primary" type="submit">
-              Enviar buenos deseos
-            </button>
-          </form>
-        </section>
-
         <section id="galeria" className="panel reveal">
           <h2>Galeria de fotos</h2>
           <p className="hashtag">#MarcoyStephanie</p>
@@ -360,33 +474,50 @@ function App() {
           </div>
         </section>
 
-        <section id="canciones" className="panel reveal">
-          <h2>Sugerencia de Canciones</h2>
-          <p>Teresa - Gracias por compartir tu cancion favorita.</p>
-          <form className="mini-form" onSubmit={(event) => event.preventDefault()}>
-            <input type="text" placeholder="Tu nombre" required />
-            <input type="text" placeholder="Cancion y artista" required />
-            <button className="button button-primary" type="submit">
-              Enviar sugerencia de cancion
-            </button>
-          </form>
-        </section>
-
-        <section id="contactos" className="split-section final reveal">
-          <div className="split-panel">
-            <div className="paper-card center">
-              <h2 className="script-text">Contactos</h2>
-              <div className="contacts-grid">
-                <a href="https://wa.me/5210000000000" target="_blank" rel="noreferrer">
-                  Novia
-                </a>
-                <a href="https://wa.me/5210000000000" target="_blank" rel="noreferrer">
-                  Novio
-                </a>
-              </div>
+        <section
+          id="contactos"
+          className="reveal w-full bg-[radial-gradient(circle_at_15%_20%,rgba(255,255,255,0.6),transparent_42%),radial-gradient(circle_at_85%_80%,rgba(191,163,123,0.2),transparent_35%),linear-gradient(180deg,#f7f2e9,#f1e8d7)] px-4 py-16"
+        >
+          <div className="mx-auto flex max-w-7xl flex-col items-center rounded-none border border-[var(--paper-border)] bg-[rgba(255,255,255,0.92)] p-8 text-center shadow-[0_18px_28px_-20px_rgba(50,38,23,0.35)]">
+            <h2 className="script-text text-[clamp(2rem,5.5vw,4.1rem)] text-[var(--paper-text-dark)]">Contactos</h2>
+            <p className="mt-3 w-full max-w-3xl text-center leading-7 text-[var(--paper-text)] text-balance">
+              Si necesitas ayuda con tu asistencia o con la hacienda, aquí están los contactos directos.
+            </p>
+            <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+              <a
+                className="flex min-h-[88px] items-center justify-center border border-[color-mix(in_srgb,var(--gold)_65%,var(--paper-border))] bg-white/85 px-4 py-4 font-[var(--heading)] text-lg text-[var(--gold)] no-underline shadow-[0_12px_26px_rgba(0,0,0,0.06)] transition duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-[0_18px_30px_rgba(0,0,0,0.1)]"
+                href="https://wa.me/50684200184"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Novia
+              </a>
+              <a
+                className="flex min-h-[88px] items-center justify-center border border-[color-mix(in_srgb,var(--gold)_65%,var(--paper-border))] bg-white/85 px-4 py-4 font-[var(--heading)] text-lg text-[var(--gold)] no-underline shadow-[0_12px_26px_rgba(0,0,0,0.06)] transition duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-[0_18px_30px_rgba(0,0,0,0.1)]"
+                href="https://wa.me/5214421192054"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Novio
+              </a>
+              <a
+                className="flex min-h-[88px] items-center justify-center border border-[color-mix(in_srgb,var(--gold)_65%,var(--paper-border))] bg-white/85 px-4 py-4 font-[var(--heading)] text-lg text-[var(--gold)] no-underline shadow-[0_12px_26px_rgba(0,0,0,0.06)] transition duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-[0_18px_30px_rgba(0,0,0,0.1)]"
+                href="https://wa.me/5215623617972"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Wedding Planner - Ericka
+              </a>
+              <a
+                className="flex min-h-[88px] items-center justify-center border border-[color-mix(in_srgb,var(--gold)_65%,var(--paper-border))] bg-white/85 px-4 py-4 font-[var(--heading)] text-lg text-[var(--gold)] no-underline shadow-[0_12px_26px_rgba(0,0,0,0.06)] transition duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-[0_18px_30px_rgba(0,0,0,0.1)]"
+                href="https://wa.me/5217771124582"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Jonathan Ramírez - Reservas Hacienda
+              </a>
             </div>
           </div>
-          <div className="split-media media-final" aria-hidden="true" />
         </section>
 
         <section className="screen outro-screen reveal">
@@ -399,8 +530,7 @@ function App() {
       </main>
 
       <footer className="wedding-footer">
-        <p>Copyright © 2026 | Invitafy</p>
-        <p>Boda Premium Elegance</p>
+        <p>Boda Marco y Stephanie</p>
       </footer>
     </>
   )
