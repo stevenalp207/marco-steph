@@ -75,11 +75,25 @@ export default function Dashboard() {
     return guestReservations.map((reservation) => {
       const key = makeReservationKey(reservation.reservation, reservation.name)
       const response = responseMap.get(key)
+      const confirmedPasses =
+        response?.attendance_status === 'si'
+          ? Math.min(reservation.passes, response?.companions_confirmed ?? 0)
+          : 0
+      const declinedPasses =
+        response?.attendance_status === 'no'
+          ? reservation.passes
+          : response?.attendance_status === 'si'
+            ? Math.max(0, reservation.passes - confirmedPasses)
+            : 0
+      const pendingPasses = response ? 0 : reservation.passes
 
       return {
         ...reservation,
         status: response?.attendance_status ?? 'pendiente',
         companionsConfirmed: response?.companions_confirmed ?? 0,
+        confirmedPasses,
+        declinedPasses,
+        pendingPasses,
         contactPhone: response?.contact_phone ?? '',
         notes: response?.notes ?? '',
         respondedAt: response?.responded_at ?? '',
@@ -88,11 +102,13 @@ export default function Dashboard() {
   }, [responses])
 
   const summary = useMemo(() => {
-    const accepted = rows.filter((item) => item.status === 'si').length
-    const declined = rows.filter((item) => item.status === 'no').length
-    const pending = rows.filter((item) => item.status === 'pendiente').length
+    const accepted = rows.reduce((total, item) => total + item.confirmedPasses, 0)
+    const declined = rows.reduce((total, item) => total + item.declinedPasses, 0)
+    const pending = rows.reduce((total, item) => total + item.pendingPasses, 0)
 
-    return { total: rows.length, accepted, declined, pending }
+    const total = rows.reduce((total, item) => total + item.passes, 0)
+
+    return { total, accepted, declined, pending }
   }, [rows])
 
   return (
