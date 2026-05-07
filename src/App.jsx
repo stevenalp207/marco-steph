@@ -19,10 +19,11 @@ const navItems = [
 ]
 
 const itinerary = [
-  { event: 'Ceremonia', time: '4:00 PM' },
-  { event: 'Recepcion', time: '6:00 PM' },
-  { event: 'Cena', time: '8:30 PM' },
-  { event: 'Fiesta', time: '9:30 PM' },
+  { event: 'Cerecomia Iglesia', time: '4:00 PM', align: 'left', icon: 'rings' },
+  { event: 'Cocetel', time: '5:00 PM', align: 'right', icon: 'toast' },
+  { event: 'Comida', time: '7:30 PM', align: 'left', icon: 'meal' },
+  { event: 'Baile', time: '8:30 PM', align: 'right', icon: 'music' },
+  { event: 'Cierre', time: '2:00 AM', align: 'left', icon: 'clock' },
 ]
 
 const palette = ['#dcd9de', '#c7c2b2', '#7a7c53', '#cbbcae', '#1f1f20', '#5f4a36']
@@ -59,6 +60,64 @@ function getCountdown() {
   const seconds = totalSeconds % 60
 
   return { days, hours, minutes, seconds }
+}
+
+function TimelineIcon({ type }) {
+  switch (type) {
+    case 'rings':
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <circle cx="9" cy="13" r="4.7" />
+          <circle cx="15" cy="13" r="4.7" />
+          <path d="M12 4.5v1.8" />
+          <path d="M11.2 4.5h1.6" />
+          <path d="M12 2.7l.7 1 .9.1-.6.7.2.9-.9-.4-.9.4.2-.9-.6-.7.9-.1z" />
+        </svg>
+      )
+    case 'toast':
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M8.3 6.2c.8 3.2 2.1 5 3.7 6.8 1.6-1.8 2.9-3.6 3.7-6.8" />
+          <path d="M6.8 6.2 9 13.1h6L17.2 6.2" />
+          <path d="M8.4 13.1v3.1" />
+          <path d="M15.6 13.1v3.1" />
+          <path d="M11.1 4.4c-.2.8-.5 1.3-1 1.8" />
+          <path d="M13 4.3c.2.8.5 1.4 1 1.9" />
+        </svg>
+      )
+    case 'meal':
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <circle cx="12" cy="12" r="5.6" />
+          <path d="M7.4 12h1.6" />
+          <path d="M15 12h1.6" />
+          <path d="M4.6 6v12" />
+          <path d="M4.6 6l1.6 2.2" />
+          <path d="M4.6 8.2l1.6-2.2" />
+          <path d="M19.4 6v12" />
+          <path d="M18.3 6v12" />
+        </svg>
+      )
+    case 'music':
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M9 18V6.8l9-2v11.2" />
+          <path d="M9 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z" />
+          <path d="M18 16a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z" />
+          <path d="M9 8.4 18 6.4" />
+        </svg>
+      )
+    case 'clock':
+    default:
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <circle cx="12" cy="12" r="7.5" />
+          <path d="M12 7.7V12l3 1.7" />
+          <path d="M9 3.8 7.2 5.2" />
+          <path d="M15 3.8l1.8 1.4" />
+        </svg>
+      )
+  }
 }
 
 function App() {
@@ -248,7 +307,7 @@ function App() {
         <section id="inicio" className="screen intro-screen reveal">
           <div className="overlay" />
           <div className="screen-content">
-            <p className="script-text intro-names">Marco &amp; Stephanie</p>
+            <p className="script-text intro-names">Steph &amp; Marco</p>
             <h1 className="hero-title">El dia mas importante de nuestras vidas ha llegado</h1>
             <p className="lead">Es un placer invitarlos</p>
 
@@ -368,17 +427,47 @@ function App() {
         </section>
 
         <section id="itinerario" className="paper-wrap reveal">
-          <article className="itinerary-card">
-            <h2 className="script-text">Itinerario</h2>
-            <div className="itinerary-grid">
+          <article className="itinerary-card itinerary-poster">
+            <p className="itinerary-kicker">Ordel del Evento</p>
+            <h2 className="itinerary-title">Itinerario</h2>
+            <div className="itinerary-track" role="list" aria-label="Itinerario de la boda">
               {itinerary.map((item) => (
-                <article key={item.event}>
-                  <h3 className="script-text small">{item.event}</h3>
-                  <p>{item.time}</p>
-                </article>
+                <div key={item.event} className={`itinerary-row ${item.align}`} role="listitem">
+                  {item.align === 'left' ? (
+                    <>
+                      <div className="itinerary-copy itinerary-copy-left">
+                        <p className="itinerary-time">{item.time}</p>
+                        <h3>{item.event}</h3>
+                      </div>
+
+                      <div className="itinerary-axis" aria-hidden="true">
+                        <span className="itinerary-node">
+                          <TimelineIcon type={item.icon} />
+                        </span>
+                      </div>
+
+                      <div className="itinerary-copy itinerary-copy-right" aria-hidden="true" />
+                    </>
+                  ) : (
+                    <>
+                      <div className="itinerary-copy itinerary-copy-left" aria-hidden="true" />
+
+                      <div className="itinerary-axis" aria-hidden="true">
+                        <span className="itinerary-node">
+                          <TimelineIcon type={item.icon} />
+                        </span>
+                      </div>
+
+                      <div className="itinerary-copy itinerary-copy-right">
+                        <p className="itinerary-time">{item.time}</p>
+                        <h3>{item.event}</h3>
+                      </div>
+                    </>
+                  )}
+                </div>
               ))}
             </div>
-            <p className="initials">M &amp; S</p>
+            <p className="initials">S &amp; M</p>
           </article>
         </section>
 
@@ -543,7 +632,7 @@ function App() {
 
         <section id="galeria" className="panel reveal">
           <h2>Galeria de fotos</h2>
-          <p className="hashtag">#MarcoyStephanie</p>
+          <p className="hashtag">#StephYMarco</p>
           <div className="gallery-grid" role="list" aria-label="Galeria de recuerdos">
             {Array.from({ length: 8 }).map((_, index) => (
               <div key={`photo-${index + 1}`} role="listitem" className="gallery-item">
@@ -609,7 +698,7 @@ function App() {
       </main>
 
       <footer className="wedding-footer">
-        <p>Boda Marco y Stephanie</p>
+        <p>Boda Steph & Marco</p>
       </footer>
 
       {isRsvpModalOpen ? (
@@ -618,7 +707,9 @@ function App() {
 
           <div className="rsvp-modal-content">
             <button type="button" className="rsvp-modal-close" onClick={closeRsvpModal} aria-label="Cerrar modal">
-              x
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M6 6L18 18M6 18L18 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+              </svg>
             </button>
 
             <form className="rsvp-box" onSubmit={handleRsvpSubmit}>
