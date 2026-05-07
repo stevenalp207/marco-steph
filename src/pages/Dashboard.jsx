@@ -4,6 +4,31 @@ import './Dashboard.css'
 import { guestReservations, makeReservationKey } from '../data/reservations'
 import { getRsvpResponses } from '../lib/supabaseClient'
 
+function StatusIcon({ status }) {
+  switch (status) {
+    case 'si':
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" className="status-icon">
+          <path d="M20 6L9 17l-5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+        </svg>
+      )
+    case 'no':
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" className="status-icon">
+          <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+        </svg>
+      )
+    default:
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" className="status-icon">
+          <circle cx="12" cy="12" r="2" fill="currentColor" />
+          <circle cx="20" cy="12" r="2" fill="currentColor" />
+          <circle cx="4" cy="12" r="2" fill="currentColor" />
+        </svg>
+      )
+  }
+}
+
 function formatDate(value) {
   if (!value) return '-'
 
@@ -33,7 +58,7 @@ export default function Dashboard() {
         const data = await getRsvpResponses()
         setResponses(data)
       } catch (error) {
-        setErrorMessage('No se pudo cargar el dashboard. Verifica politicas de Supabase.')
+        setErrorMessage('No se pudo cargar el dashboard. Verifica las políticas de Supabase.')
       } finally {
         setIsLoading(false)
       }
@@ -77,10 +102,10 @@ export default function Dashboard() {
           <div>
             <p className="dashboard-kicker">Panel de asistencia</p>
             <h1>Dashboard de Reservaciones</h1>
-            <p className="dashboard-subtitle">Muestra quienes ya aceptaron, quienes no y quienes siguen pendientes.</p>
+            <p className="dashboard-subtitle">Muestra quiénes ya aceptaron, quiénes no y quiénes siguen pendientes.</p>
           </div>
           <Link to="/" className="dashboard-back-link">
-            Volver a invitacion
+            Volver a la invitación
           </Link>
         </header>
 
@@ -94,7 +119,7 @@ export default function Dashboard() {
             <strong>{summary.accepted}</strong>
           </article>
           <article className="nope">
-            <p>No asistiran</p>
+            <p>No asistirán</p>
             <strong>{summary.declined}</strong>
           </article>
           <article className="wait">
@@ -116,7 +141,7 @@ export default function Dashboard() {
                   <th>Pases</th>
                   <th>Estado</th>
                   <th>Acomp.</th>
-                  <th>Telefono</th>
+                  <th>Teléfono</th>
                   <th>Comentario</th>
                   <th>Fecha respuesta</th>
                 </tr>
@@ -129,8 +154,9 @@ export default function Dashboard() {
                     <td>{row.passes}</td>
                     <td>
                       <span className={`status-pill ${row.status}`}>
+                        <StatusIcon status={row.status} />
                         {row.status === 'si'
-                          ? 'Acepto'
+                          ? 'Aceptó'
                           : row.status === 'no'
                             ? 'No asiste'
                             : 'Pendiente'}

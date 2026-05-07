@@ -109,11 +109,20 @@
 
 .status-pill {
   display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   border: 1px solid transparent;
   padding: 0.2rem 0.45rem;
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.07em;
+}
+
+.status-icon {
+  width: 0.85rem;
+  height: 0.85rem;
+  display: block;
+  flex-shrink: 0;
 }
 
 .status-pill.si {

@@ -12,15 +12,15 @@ const navItems = [
   { href: '#ubicaciones', label: 'Ubicaciones' },
   { href: '#historia', label: 'Nuestra Historia' },
   { href: '#regalos', label: 'Mesa de regalos' },
-  { href: '#dresscode', label: 'Codigo de vestimenta' },
+  { href: '#dresscode', label: 'Código de vestimenta' },
   { href: '#hospedaje', label: 'Hospedaje' },
-  { href: '#galeria', label: 'Galeria' },
+  { href: '#galeria', label: 'Galería' },
   { href: '#contactos', label: 'Contactos' },
 ]
 
 const itinerary = [
-  { event: 'Cerecomia Iglesia', time: '4:00 PM', align: 'left', icon: 'rings' },
-  { event: 'Cocetel', time: '5:00 PM', align: 'right', icon: 'toast' },
+  { event: 'Ceremonia Iglesia', time: '4:00 PM', align: 'left', icon: 'rings' },
+  { event: 'Cóctel', time: '5:00 PM', align: 'right', icon: 'toast' },
   { event: 'Comida', time: '7:30 PM', align: 'left', icon: 'meal' },
   { event: 'Baile', time: '8:30 PM', align: 'right', icon: 'music' },
   { event: 'Cierre', time: '2:00 AM', align: 'left', icon: 'clock' },
@@ -32,17 +32,17 @@ const timeline = [
   {
     year: '2018',
     title: 'Nos conocimos',
-    text: 'Despues de algunos dias hablando por mensajes, tuvimos nuestra primera salida a un picnic en lo alto de la ciudad.',
+    text: 'Después de algunos días hablando por mensajes, tuvimos nuestra primera salida a un picnic en lo alto de la ciudad.',
   },
   {
     year: '2021',
     title: 'Construimos nuestro hogar',
-    text: 'Entre viajes, desvelos y muchas risas fuimos descubriendo que queriamos compartir cada etapa juntos.',
+    text: 'Entre viajes, desvelos y muchas risas fuimos descubriendo que queríamos compartir cada etapa juntos.',
   },
   {
     year: '2026',
     title: 'Nos casamos',
-    text: 'Hoy celebramos el inicio de una nueva familia con las personas mas importantes de nuestras vidas.',
+    text: 'Hoy celebramos el inicio de una nueva familia con las personas más importantes de nuestras vidas.',
   },
 ]
 
@@ -60,6 +60,50 @@ function getCountdown() {
   const seconds = totalSeconds % 60
 
   return { days, hours, minutes, seconds }
+}
+
+function SectionIcon({ type = 'heart' }) {
+  switch (type) {
+    case 'history':
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" className="w-6 h-6 inline-block mr-2">
+          <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="1.5" />
+          <path d="M12 6v6l4 2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+        </svg>
+      )
+    case 'gifts':
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" className="w-6 h-6 inline-block mr-2">
+          <path d="M12 2v8M8 5h8M6 7h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V9a2 2 0 012-2z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+        </svg>
+      )
+    case 'dresscode':
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" className="w-6 h-6 inline-block mr-2">
+          <path d="M6 7h12M10 3h4v4H10zM5 11h14l-1 10H6l-1-10z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+        </svg>
+      )
+    case 'gallery':
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" className="w-6 h-6 inline-block mr-2">
+          <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="1.5" fill="none" />
+          <circle cx="8" cy="8" r="1.5" fill="currentColor" />
+          <path d="M3 15l5-5 5 5 5-5v8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+        </svg>
+      )
+    case 'contacts':
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" className="w-6 h-6 inline-block mr-2">
+          <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+        </svg>
+      )
+    default:
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" className="w-6 h-6 inline-block mr-2">
+          <path d="M20.84 4.61a5.5 5.5 0 01-7.78 7.78l-5.33-5.34a5.5 5.5 0 117.78-7.78l5.33 5.34z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+        </svg>
+      )
+  }
 }
 
 function TimelineIcon({ type }) {
@@ -276,39 +320,14 @@ function App() {
 
   return (
     <>
-      <button
-        type="button"
-        className="menu-toggle"
-        aria-label={isMenuOpen ? 'Cerrar menu' : 'Abrir menu'}
-        aria-expanded={isMenuOpen}
-        aria-controls="main-menu"
-        onClick={() => setIsMenuOpen((value) => !value)}
-      >
-        <span className="menu-toggle-line" />
-        <span className="menu-toggle-line" />
-        <span className="menu-toggle-line" />
-      </button>
 
-      <header className="wedding-header">
-        <nav
-          id="main-menu"
-          className={`wedding-nav ${isMenuOpen ? 'open' : ''}`}
-          aria-label="Navegacion principal"
-        >
-          {navItems.map((item) => (
-            <a key={item.href} href={item.href} onClick={() => setIsMenuOpen(false)}>
-              {item.label}
-            </a>
-          ))}
-        </nav>
-      </header>
 
       <main className="invitation-main">
         <section id="inicio" className="screen intro-screen reveal">
           <div className="overlay" />
           <div className="screen-content">
             <p className="script-text intro-names">Steph &amp; Marco</p>
-            <h1 className="hero-title">El dia mas importante de nuestras vidas ha llegado</h1>
+            <h1 className="hero-title">El día más importante de nuestras vidas ha llegado</h1>
             <p className="lead">Es un placer invitarlos</p>
 
             <div className="guest-box">
@@ -335,7 +354,7 @@ function App() {
               </form>
 
               <p className="text-sm text-white/75">
-                Busca por apellido o nombre de reserva. Si tu reserva incluye esposa o esposo, aparecerá con 2 pases.
+                Busca por apellido o nombre de reserva. Si tu reserva incluye esposo o esposa, aparecerá con 2 pases.
               </p>
 
               {guestLookup ? (
@@ -400,7 +419,7 @@ function App() {
 
             <a
               className="button button-secondary"
-              href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Boda+Marco+y+Stephanie&dates=20261121T220000Z%2F20261122T050000Z&details=Nos+encantara+compartir+este+dia+contigo.&location=Hacienda+Lagunillas%2C+Queretaro%2C+Mexico"
+              href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Boda+Marco+y+Stephanie&dates=20261121T220000Z%2F20261122T050000Z&details=Nos+encantará+compartir+este+día+contigo.&location=Hacienda+Lagunillas%2C+Quer%C3%A9taro%2C+Mexico"
               target="_blank"
               rel="noreferrer"
             >
@@ -428,7 +447,7 @@ function App() {
 
         <section id="itinerario" className="paper-wrap reveal">
           <article className="itinerary-card itinerary-poster">
-            <p className="itinerary-kicker">Ordel del Evento</p>
+            <p className="itinerary-kicker">Orden del evento</p>
             <h2 className="itinerary-title">Itinerario</h2>
             <div className="itinerary-track" role="list" aria-label="Itinerario de la boda">
               {itinerary.map((item) => (
@@ -476,15 +495,15 @@ function App() {
             <div className="location-content">
               <div>
                 <h2 className="gold-title">Parroquia del</h2>
-                <h3 className="script-title">Sagrado Corazon de Jesus</h3>
-                <p>Lagunillas, Queretaro</p>
+                <h3 className="script-title">Sagrado Corazón de Jesús</h3>
+                <p>Lagunillas, Querétaro</p>
                 <a
-                  href="https://www.google.com/maps/search/?api=1&query=Parroquia+del+Sagrado+Corazon+de+Jesus+Lagunillas+Queretaro"
+                  href="https://www.google.com/maps/search/?api=1&query=Parroquia+del+Sagrado+Coraz%C3%B3n+de+Jes%C3%BAs+Lagunillas+Quer%C3%A9taro"
                   target="_blank"
                   rel="noreferrer"
                   className="location-link"
                 >
-                  🔍 Ir a ubicacion
+                  🔍 Ir a ubicación
                 </a>
               </div>
               <div className="location-photo photo-church" aria-hidden="true" />
@@ -494,16 +513,16 @@ function App() {
           <div className="location-item">
             <div className="location-content">
               <div>
-                <h2 className="gold-title">Recepcion:</h2>
+                <h2 className="gold-title">Recepción:</h2>
                 <h3 className="script-title">Hacienda Lagunillas</h3>
-                <p>Lagunillas, Queretaro</p>
+                <p>Lagunillas, Querétaro</p>
                 <a
-                  href="https://www.google.com/maps/search/?api=1&query=Hacienda+Lagunillas+Queretaro+Mexico"
+                  href="https://www.google.com/maps/search/?api=1&query=Hacienda+Lagunillas+Quer%C3%A9taro+Mexico"
                   target="_blank"
                   rel="noreferrer"
                   className="location-link"
                 >
-                  🔍 Ir a ubicacion
+                  🔍 Ir a ubicación
                 </a>
               </div>
               <div className="location-photo photo-hacienda" aria-hidden="true" />
@@ -532,7 +551,7 @@ function App() {
                 href="/info-hacienda.jpeg"
                 target="_blank"
                 rel="noreferrer"
-                aria-label="Abrir informacion completa de Hacienda Lagunillas"
+                aria-label="Abrir información completa de Hacienda Lagunillas"
               >
                 <div
                   className="h-[350px] border border-[var(--paper-border)] bg-[rgba(255,255,255,0.7)] bg-contain bg-center bg-no-repeat"
@@ -560,7 +579,7 @@ function App() {
         <section id="historia" className="paper-wrap reveal">
           <article className="history-card">
             <div>
-              <h2 className="gold-title">Nuestra</h2>
+              <h2 className="gold-title"><SectionIcon type="history" />Nuestra</h2>
               <p className="script-text xl">Historia</p>
             </div>
             <div className="history-detail">
@@ -576,10 +595,10 @@ function App() {
         </section>
 
         <section id="regalos" className="panel reveal">
-          <h2>Mesa de Regalos</h2>
+          <h2><SectionIcon type="gifts" />Mesa de Regalos</h2>
           <p>
-            Que nos acompanes es lo mas importante. Si esta en tu disposicion
-            realizar una muestra de carino, estaremos muy agradecidos.
+            Que nos acompañes es lo más importante. Si está en tu disposición
+            realizar una muestra de cariño, estaremos muy agradecidos.
           </p>
           <div className="panel-actions">
             <a className="button button-secondary" href="https://www.amazon.com.mx/" target="_blank" rel="noreferrer">
@@ -590,8 +609,8 @@ function App() {
             </a>
           </div>
           <p className="quote">
-            &quot;La lluvia de sobres es la tradicion de regalar dinero en efectivo en
-            un sobre el dia del evento&quot;.
+            &quot;La lluvia de sobres es la tradición de regalar dinero en efectivo en
+            un sobre el día del evento&quot;.
           </p>
           <details className="bank-details">
             <summary>Ver datos bancarios</summary>
@@ -604,7 +623,7 @@ function App() {
         <section id="dresscode" className="reveal bg-[var(--gold-bg)] px-4 py-12">
           <article className="mx-auto flex max-w-6xl flex-col items-center gap-6 border border-[var(--paper-border)] bg-[var(--paper-bg)] p-8 text-center shadow-[0_18px_28px_-20px_rgba(50,38,23,0.35)]">
             <h2 className="dresscode-title text-[clamp(1.8rem,4.6vw,3.6rem)] italic text-[var(--paper-text-dark)]">
-              Codigo de Vestimenta
+              <SectionIcon type="dresscode" />Código de vestimenta
             </h2>
             <div className="w-full">
               <img
@@ -618,12 +637,12 @@ function App() {
 
         <section className="paper-wrap reveal">
           <article className="notes-card big">
-            <h3 className="script-text">A Tomar en Cuenta</h3>
+            <h3 className="script-text">A tomar en cuenta</h3>
             <ol>
               <li>Llegar al menos 20 minutos antes del inicio del evento.</li>
-              <li>Seguir el codigo de vestimenta especificado en la invitacion.</li>
-              <li>Confirmar asistencia con anticipacion para una mejor organizacion.</li>
-              <li>Evitar llevar acompanantes no incluidos en la invitacion.</li>
+              <li>Seguir el código de vestimenta especificado en la invitación.</li>
+              <li>Confirmar asistencia con anticipación para una mejor organización.</li>
+              <li>Evitar llevar acompañantes no incluidos en la invitación.</li>
               <li>Seguir las indicaciones del personal del evento.</li>
               <li>Respetar la hora de cierre del evento.</li>
             </ol>
@@ -631,9 +650,9 @@ function App() {
         </section>
 
         <section id="galeria" className="panel reveal">
-          <h2>Galeria de fotos</h2>
+          <h2><SectionIcon type="gallery" />Galería de fotos</h2>
           <p className="hashtag">#StephYMarco</p>
-          <div className="gallery-grid" role="list" aria-label="Galeria de recuerdos">
+          <div className="gallery-grid" role="list" aria-label="Galería de recuerdos">
             {Array.from({ length: 8 }).map((_, index) => (
               <div key={`photo-${index + 1}`} role="listitem" className="gallery-item">
                 <span>Foto {index + 1}</span>
@@ -647,7 +666,7 @@ function App() {
           className="reveal w-full bg-[radial-gradient(circle_at_15%_20%,rgba(255,255,255,0.6),transparent_42%),radial-gradient(circle_at_85%_80%,rgba(191,163,123,0.2),transparent_35%),linear-gradient(180deg,#f7f2e9,#f1e8d7)] px-4 py-16"
         >
           <div className="mx-auto flex max-w-7xl flex-col items-center rounded-none border border-[var(--paper-border)] bg-[rgba(255,255,255,0.92)] p-8 text-center shadow-[0_18px_28px_-20px_rgba(50,38,23,0.35)]">
-            <h2 className="script-text text-[clamp(2rem,5.5vw,4.1rem)] text-[var(--paper-text-dark)]">Contactos</h2>
+            <h2 className="script-text text-[clamp(2rem,5.5vw,4.1rem)] text-[var(--paper-text-dark)]"><SectionIcon type="contacts" />Contactos</h2>
             <p className="mt-3 w-full max-w-3xl text-center leading-7 text-[var(--paper-text)] text-balance">
               Si necesitas ayuda con tu asistencia o con la hacienda, aquí están los contactos directos.
             </p>
@@ -691,14 +710,14 @@ function App() {
         <section className="screen outro-screen reveal">
           <div className="overlay" />
           <div className="screen-content compact">
-            <p className="gold-title">Nos gustaria que nos acompanes en este dia</p>
+            <p className="gold-title">Nos gustaría que nos acompañes en este día</p>
             <p className="script-text">tan especial</p>
           </div>
         </section>
       </main>
 
       <footer className="wedding-footer">
-        <p>Boda Steph & Marco</p>
+        <p>Boda Steph &amp; Marco</p>
       </footer>
 
       {isRsvpModalOpen ? (
@@ -744,8 +763,8 @@ function App() {
                     value={attendanceStatus}
                     onChange={(event) => setAttendanceStatus(event.target.value)}
                   >
-                    <option value="si">Si, asistire</option>
-                    <option value="no">No podre asistir</option>
+                    <option value="si">Sí, asistiré</option>
+                    <option value="no">No podré asistir</option>
                   </select>
                 </div>
 
@@ -774,7 +793,7 @@ function App() {
                 <p className="rsvp-helper-text">Primero busca tu reserva para habilitar los pases disponibles.</p>
               )}
 
-              <label htmlFor="rsvp-phone">Telefono (opcional)</label>
+                  <label htmlFor="rsvp-phone">Teléfono (opcional)</label>
               <input
                 id="rsvp-phone"
                 type="tel"
