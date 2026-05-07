@@ -628,7 +628,7 @@ function App() {
             <div className="w-full">
               <img
                 className="mx-auto block h-auto w-full max-w-[920px] rounded-[0.6rem] border border-[var(--paper-border)] bg-white object-contain shadow-[0_12px_30px_rgba(0,0,0,0.08)]"
-                src="/dress-code.jpeg"
+                src="/dress-code.png"
                 alt="Dress code"
               />
             </div>
