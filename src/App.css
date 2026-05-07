@@ -954,7 +954,7 @@
 	border: 1px solid var(--paper-border);
 	background-image:
 		linear-gradient(120deg, rgba(255, 255, 255, 0.15), transparent),
-		url('/dress-code.png');
+		url('/dress-code.jpeg');
 	background-size: cover;
 	background-position: center;
 }
