@@ -419,7 +419,7 @@ function App() {
 
             <a
               className="button button-secondary"
-              href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Boda+Marco+y+Stephanie&dates=20261121T220000Z%2F20261122T050000Z&details=Nos+encantará+compartir+este+día+contigo.&location=Hacienda+Lagunillas%2C+Quer%C3%A9taro%2C+Mexico"
+              href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Boda+Stephanie+y+Marco&dates=20261121T220000Z%2F20261122T050000Z&details=Nos+encantará+compartir+este+día+contigo.&location=Hacienda+Lagunillas%2C+Quer%C3%A9taro%2C+Mexico"
               target="_blank"
               rel="noreferrer"
             >
