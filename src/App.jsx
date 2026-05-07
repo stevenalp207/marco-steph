@@ -579,7 +579,7 @@ function App() {
         <section id="historia" className="paper-wrap reveal">
           <article className="history-card">
             <div>
-              <h2 className="gold-title"><SectionIcon type="history" />Nuestra</h2>
+              <h2 className="gold-title">Nuestra</h2>
               <p className="script-text xl">Historia</p>
             </div>
             <div className="history-detail">
@@ -595,7 +595,7 @@ function App() {
         </section>
 
         <section id="regalos" className="panel reveal">
-          <h2><SectionIcon type="gifts" />Mesa de Regalos</h2>
+          <h2>Mesa de Regalos</h2>
           <p>
             Que nos acompañes es lo más importante. Si está en tu disposición
             realizar una muestra de cariño, estaremos muy agradecidos.
@@ -623,7 +623,7 @@ function App() {
         <section id="dresscode" className="reveal bg-[var(--gold-bg)] px-4 py-12">
           <article className="mx-auto flex max-w-6xl flex-col items-center gap-6 border border-[var(--paper-border)] bg-[var(--paper-bg)] p-8 text-center shadow-[0_18px_28px_-20px_rgba(50,38,23,0.35)]">
             <h2 className="dresscode-title text-[clamp(1.8rem,4.6vw,3.6rem)] italic text-[var(--paper-text-dark)]">
-              <SectionIcon type="dresscode" />Código de vestimenta
+              Código de vestimenta
             </h2>
             <div className="w-full">
               <img
