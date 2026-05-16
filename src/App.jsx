@@ -20,7 +20,7 @@ const navItems = [
 
 const itinerary = [
   { event: 'Ceremonia', time: '4:00 PM', align: 'left', icon: 'rings' },
-  { event: 'Coctel de bienvenida', time: '5:00 PM ', align: 'right', icon: 'toast' },
+  { event: 'Coctel de bienvenida', time: '5:00 PM', align: 'right', icon: 'toast' },
   { event: 'Acomodo de invitados', time: '5:45 PM', align: 'left', icon: 'clock' },
   { event: 'Entrada de novios', time: '6:10 PM', align: 'right', icon: 'toast' },
   { event: 'Banquete', time: '6:10 PM', align: 'left', icon: 'meal' },
