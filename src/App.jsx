@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import { isSupabaseConfigured, saveRsvpResponse } from './lib/supabaseClient'
-import { guestReservations, makeReservationKey, normalizeText } from './data/reservations'
+import { guestReservations, makeReservationKey } from './data/reservations'
 
 const weddingDate = new Date('2026-11-21T16:00:00-06:00')
 
@@ -19,11 +19,15 @@ const navItems = [
 ]
 
 const itinerary = [
-  { event: 'Ceremonia Iglesia', time: '4:00 PM', align: 'left', icon: 'rings' },
-  { event: 'Cóctel', time: '5:00 PM', align: 'right', icon: 'toast' },
-  { event: 'Comida', time: '7:30 PM', align: 'left', icon: 'meal' },
-  { event: 'Baile', time: '8:30 PM', align: 'right', icon: 'music' },
-  { event: 'Cierre', time: '2:00 AM', align: 'left', icon: 'clock' },
+  { event: 'Ceremonia', time: '4:00 PM', align: 'left', icon: 'rings' },
+  { event: 'Coctel de bienvenida', time: '5:00 PM ', align: 'right', icon: 'toast' },
+  { event: 'Acomodo de invitados', time: '5:45 PM', align: 'left', icon: 'clock' },
+  { event: 'Entrada de novios', time: '6:10 PM', align: 'right', icon: 'toast' },
+  { event: 'Banquete', time: '6:10 PM', align: 'left', icon: 'meal' },
+  { event: 'Vals', time: '7:00 PM', align: 'right', icon: 'music' },
+  { event: 'Se abre pista', time: '7:25 PM', align: 'left', icon: 'music' },
+  { event: 'Menu de trasnochados', time: '11:30 PM', align: 'right', icon: 'meal' },
+  { event: 'Fin de la fiesta', time: '1:00 AM', align: 'left', icon: 'clock' },
 ]
 
 const palette = ['#dcd9de', '#c7c2b2', '#7a7c53', '#cbbcae', '#1f1f20', '#5f4a36']
@@ -178,13 +182,9 @@ function App() {
   const [isSubmittingRsvp, setIsSubmittingRsvp] = useState(false)
   const [rsvpMessage, setRsvpMessage] = useState({ type: '', text: '' })
 
-  const normalizedGuestLookup = normalizeText(guestLookup)
-  const guestResults = normalizedGuestLookup
-    ? guestReservations.filter(
-        (reservation) =>
-          normalizeText(reservation.reservation).includes(normalizedGuestLookup) ||
-          normalizeText(reservation.name).includes(normalizedGuestLookup),
-      )
+  const reservationCodeLookup = guestLookup.trim().toUpperCase()
+  const guestResults = reservationCodeLookup
+    ? guestReservations.filter((reservation) => reservation.reservation.trim().toUpperCase() === reservationCodeLookup)
     : []
 
   const selectedGuest = guestResults.find(
@@ -333,14 +333,14 @@ function App() {
             <div className="guest-box">
               <form className="grid gap-3" onSubmit={handleGuestSearch}>
                 <label htmlFor="guest-reservation" className="text-xs uppercase tracking-[0.2em] text-white/75">
-                  Nombre de la reserva
+                  Número de reserva
                 </label>
                 <div className="flex flex-col gap-3 sm:flex-row">
                   <input
                     id="guest-reservation"
                     value={guestInput}
                     onChange={(event) => setGuestInput(event.target.value)}
-                    placeholder="Escribe tu apellido"
+                    placeholder="Ej. MRC-1001"
                     className="w-full rounded-md border border-white/25 bg-black/20 px-4 py-3 text-center text-white outline-none transition placeholder:text-white/55 focus:border-[var(--gold)] focus:bg-black/30"
                     autoComplete="off"
                   />
@@ -354,7 +354,7 @@ function App() {
               </form>
 
               <p className="text-sm text-white/75">
-                Busca por apellido o nombre de reserva. Si tu reserva incluye esposo o esposa, aparecerá con 2 pases.
+                Ingresa el código exacto de tu reserva. Si tu reserva incluye esposo o esposa, aparecerá con 2 pases.
               </p>
 
               {guestLookup ? (
@@ -380,7 +380,7 @@ function App() {
                   </div>
                 ) : (
                   <div className="rounded-[0.7rem] border border-white/20 bg-black/25 px-4 py-4 text-white">
-                    No encontramos una reserva con ese apellido.
+                    No encontramos una reserva con ese número de reserva.
                   </div>
                 )
               ) : null}
