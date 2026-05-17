@@ -109,13 +109,21 @@
 }
 
 .intro-screen {
-	background-image:
-		linear-gradient(115deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.4)),
-		url('/couple-portada.jpg');
-	background-size: cover;
-	background-position: center;
-	background-attachment: fixed;
+	/* background image provided via <img> in App.jsx */
+	background-image: none;
 }
+
+.intro-screen .intro-bg {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	z-index: 0;
+}
+
+.intro-screen .overlay { z-index: 1; }
+.intro-screen .screen-content { z-index: 2; }
 
 .countdown-screen {
 	background:
@@ -456,15 +464,92 @@
 	min-height: 100%;
 	background-size: cover;
 	background-position: center;
+	/* slider container: fixed responsive height so all images match */
+	height: clamp(320px, 42vh, 560px);
+	position: relative;
 }
 
 .media-one {
-	background-image:
-		linear-gradient(120deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4)),
-		url('/media-one.jpg');
-	background-size: cover;
-	background-position: center 18%;
+	/* image provided via <img> in App.jsx */
+	background-image: none;
 }
+
+.split-media .slider-image {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+	opacity: 0;
+	transition: opacity 600ms ease;
+}
+.split-media .slider-image.active {
+	opacity: 1;
+}
+
+/* Shift certain images down to avoid cropping heads */
+.split-media .slider-image.shift-down {
+	/* move the focal point lower (center X, 80% Y) to avoid cropping heads */
+	object-position: center 80%;
+}
+
+/* Individual adjustments so we can fine-tune each problematic photo */
+.split-media .slider-image.shift-g1 { object-position: center 88%; }
+.split-media .slider-image.shift-g9 { object-position: center 86%; }
+.split-media .slider-image.shift-g10 { object-position: center 88%; }
+.split-media .slider-image.shift-g11 { object-position: center 90%; }
+
+/* Slider controls */
+.slider-control {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 44px;
+	height: 44px;
+	border-radius: 999px;
+	background: rgba(0,0,0,0.45);
+	color: #fff;
+	border: none;
+	display: grid;
+	place-items: center;
+	cursor: pointer;
+	z-index: 40;
+	font-size: 1.4rem;
+	line-height: 1;
+}
+.slider-control.prev { left: 12px; }
+.slider-control.next { right: 12px; }
+.slider-control:focus {
+	outline: 2px solid var(--gold);
+	outline-offset: 2px;
+}
+
+/* Indicators (dots) */
+.slider-indicators {
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+	bottom: 12px;
+	display: flex;
+	gap: 8px;
+	z-index: 40;
+}
+.slider-indicator {
+	width: 10px;
+	height: 10px;
+	border-radius: 999px;
+	background: rgba(255,255,255,0.55);
+	border: 1px solid rgba(0,0,0,0.12);
+	padding: 0;
+	cursor: pointer;
+}
+.slider-indicator.active {
+	background: var(--gold);
+	width: 12px;
+	height: 12px;
+}
+.slider-indicator:focus { outline: 2px solid var(--gold); outline-offset: 2px; }
 
 .media-two {
 	background:
@@ -786,10 +871,11 @@
 }
 
 .location-photo {
+	width: 100%;
 	height: 450px;
+	display: block;
 	border: 1px solid var(--paper-border);
-	background-size: cover;
-	background-position: center;
+	object-fit: cover;
 }
 
 .padrinos-card {
@@ -803,28 +889,12 @@
 }
 
 .media-padrinos {
-	background-image:
-		linear-gradient(120deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.35)),
-		url('/padrinos.jpg');
-	background-size: cover;
-	background-position: center;
+	background-image: none;
 }
 
 .mini-photo {
 	height: 210px;
 	border: 1px solid var(--paper-border);
-	background-size: cover;
-	background-position: center;
-}
-
-.photo-church {
-	background-image: url('/iglesia.jpg');
-	background-size: cover;
-	background-position: center;
-}
-
-.photo-hacienda {
-	background-image: url('/venue-hacienda.jpg');
 	background-size: cover;
 	background-position: center;
 }
@@ -852,17 +922,17 @@
 	position: relative;
 }
 
-.history-detail article:nth-child(1) {
-	background-image: linear-gradient(120deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.8)), url('/historia-2018.jpg');
+.history-detail article img {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	z-index: 0;
+	opacity: 0.95;
 }
 
-.history-detail article:nth-child(2) {
-	background-image: linear-gradient(120deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.8)), url('/historia-2021.jpg');
-}
-
-.history-detail article:nth-child(3) {
-	background-image: linear-gradient(120deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.8)), url('/historia-2026.jpg');
-}
+.history-detail article > * { position: relative; z-index: 1; }
 
 .history-detail article h3 {
 	margin: 0.2rem 0;
@@ -952,11 +1022,7 @@
 	height: 920px;
 	border-radius: 1rem;
 	border: 1px solid var(--paper-border);
-	background-image:
-		linear-gradient(120deg, rgba(255, 255, 255, 0.15), transparent),
-		url('/dress-code.jpeg');
-	background-size: cover;
-	background-position: center;
+	background-image: none;
 }
 
 .notes-card.big {
@@ -1037,22 +1103,20 @@ blockquote cite {
 .gallery-item {
 	aspect-ratio: 4 / 5;
 	border: 1px solid var(--paper-border);
-	background-size: cover;
-	background-position: center;
 	display: grid;
 	place-items: end start;
 	padding: 0.5rem;
 	position: relative;
+	overflow: hidden;
 }
 
-.gallery-item:nth-child(1) { background-image: linear-gradient(120deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4)), url('/galeria-1.jpg'); }
-.gallery-item:nth-child(2) { background-image: linear-gradient(120deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4)), url('/galeria-2.jpg'); }
-.gallery-item:nth-child(3) { background-image: linear-gradient(120deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4)), url('/galeria-3.jpg'); }
-.gallery-item:nth-child(4) { background-image: linear-gradient(120deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4)), url('/galeria-4.jpg'); }
-.gallery-item:nth-child(5) { background-image: linear-gradient(120deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4)), url('/galeria-5.jpg'); }
-.gallery-item:nth-child(6) { background-image: linear-gradient(120deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4)), url('/galeria-6.jpg'); }
-.gallery-item:nth-child(7) { background-image: linear-gradient(120deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4)), url('/galeria-7.jpg'); }
-.gallery-item:nth-child(8) { background-image: linear-gradient(120deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4)), url('/galeria-8.jpg'); }
+.gallery-item img {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
 .gallery-item span {
 	color: #fff;
 	letter-spacing: 0.1em;
@@ -1239,12 +1303,8 @@ blockquote cite {
 }
 
 .intro-screen {
-	background-image:
-		linear-gradient(115deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.4)),
-		url('/historia-2021.jpg');
-	background-size: cover;
-	background-position: center;
-	background-attachment: scroll;
+	/* background image provided via <img> in App.jsx */
+	background-image: none;
 	animation: fade-in 1.2s ease-out both;
 }
 
