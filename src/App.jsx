@@ -5,19 +5,6 @@ import { guestReservations, makeReservationKey } from './data/reservations'
 
 const weddingDate = new Date('2026-11-21T16:00:00-06:00')
 
-const navItems = [
-  { href: '#inicio', label: 'Inicio' },
-  { href: '#confirmar', label: 'Confirmar Asistencia' },
-  { href: '#itinerario', label: 'Itinerario' },
-  { href: '#ubicaciones', label: 'Ubicaciones' },
-  { href: '#historia', label: 'Nuestra Historia' },
-  { href: '#regalos', label: 'Mesa de regalos' },
-  { href: '#dresscode', label: 'Código de vestimenta' },
-  { href: '#hospedaje', label: 'Hospedaje' },
-  { href: '#galeria', label: 'Galería' },
-  { href: '#contactos', label: 'Contactos' },
-]
-
 const itinerary = [
   { event: 'Ceremonia', time: '4:00 PM', align: 'left', icon: 'rings' },
   { event: 'Coctel de bienvenida', time: '5:00 PM', align: 'right', icon: 'toast' },
@@ -30,7 +17,6 @@ const itinerary = [
   { event: 'Fin de la fiesta', time: '1:00 AM', align: 'left', icon: 'clock' },
 ]
 
-const palette = ['#dcd9de', '#c7c2b2', '#7a7c53', '#cbbcae', '#1f1f20', '#5f4a36']
 
 const timeline = [
   {
@@ -166,6 +152,103 @@ function TimelineIcon({ type }) {
         </svg>
       )
   }
+}
+
+// Replaced ImageSlider with a static image; slider removed per request.
+
+function ImageSlider({ images = [], interval = 4000, className = '' }) {
+  const [index, setIndex] = useState(0)
+  const [paused, setPaused] = useState(false)
+
+  // use a primitive (length) in the dependency list so the deps array size is stable
+  const imagesLength = images.length
+
+  useEffect(() => {
+    if (!imagesLength || paused) return
+
+    // reset index if images length decreased
+    if (index >= imagesLength) {
+      setIndex(0)
+      return
+    }
+
+    const id = window.setTimeout(() => setIndex((index + 1) % imagesLength), interval)
+    return () => window.clearTimeout(id)
+  }, [index, imagesLength, interval, paused])
+
+  if (!images.length) return null
+
+  return (
+    <div
+      className={`split-media ${className}`}
+      style={{ position: 'relative', overflow: 'hidden' }}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      aria-live="polite"
+    >
+      {images.map((img, i) => {
+        const low = img.toLowerCase()
+        let shiftClass = ''
+
+        if (low.includes('galeria-1.jpg')) shiftClass = 'shift-g1'
+        else if (low.includes('galeria-9.jpg')) shiftClass = 'shift-g9'
+        else if (low.includes('galeria-10.jpg')) shiftClass = 'shift-g10'
+        else if (low.includes('galeria-11.jpg')) shiftClass = 'shift-g11'
+
+        return (
+          <img
+            key={img}
+            src={`/${img}`}
+            alt={`Imagen ${i + 1} de ${images.length}`}
+            className={`slider-image ${i === index ? 'active' : ''} ${shiftClass}`}
+          />
+        )
+      })}
+
+      {/* Controls */}
+      <button
+        type="button"
+        className="slider-control prev"
+        aria-label="Anterior"
+        onClick={() => {
+          setIndex((index - 1 + imagesLength) % imagesLength)
+        }}
+        onFocus={() => setPaused(true)}
+        onBlur={() => setPaused(false)}
+      >
+        ‹
+      </button>
+
+      <button
+        type="button"
+        className="slider-control next"
+        aria-label="Siguiente"
+        onClick={() => {
+          setIndex((index + 1) % imagesLength)
+        }}
+        onFocus={() => setPaused(true)}
+        onBlur={() => setPaused(false)}
+      >
+        ›
+      </button>
+
+      {/* Indicators */}
+      <div className="slider-indicators" role="tablist" aria-label="Indicadores de la galería">
+        {images.map((_, i) => (
+          <button
+            key={`dot-${i}`}
+            type="button"
+            className={`slider-indicator ${i === index ? 'active' : ''}`}
+            aria-label={`Ir a imagen ${i + 1}`}
+            aria-pressed={i === index}
+            onClick={() => setIndex(i)}
+            onFocus={() => setPaused(true)}
+            onBlur={() => setPaused(false)}
+          />
+        ))}
+      </div>
+    </div>
+  )
 }
 
 function App() {
@@ -324,6 +407,7 @@ function App() {
 
       <main className="invitation-main">
         <section id="inicio" className="screen intro-screen reveal">
+          <img className="intro-bg" src="/hero-couple.jpg" alt="Steph &amp; Marco" />
           <div className="overlay" />
           <div className="screen-content">
             <p className="script-text intro-names">Steph &amp; Marco</p>
@@ -341,12 +425,12 @@ function App() {
                     value={guestInput}
                     onChange={(event) => setGuestInput(event.target.value)}
                     placeholder="Ej. MRC-1001"
-                    className="w-full rounded-md border border-white/25 bg-black/20 px-4 py-3 text-center text-white outline-none transition placeholder:text-white/55 focus:border-[var(--gold)] focus:bg-black/30"
+                    className="w-full rounded-md border border-white/25 bg-black/20 px-4 py-3 text-center text-white outline-none transition placeholder:text-white/55 focus:border-(--gold) focus:bg-black/30"
                     autoComplete="off"
                   />
                   <button
                     type="submit"
-                    className="button button-primary min-w-[150px] whitespace-nowrap"
+                    className="button button-primary min-w-37.5 whitespace-nowrap"
                   >
                     Buscar
                   </button>
@@ -430,7 +514,11 @@ function App() {
         </section>
 
         <section className="split-section beige reveal">
-          <div className="split-media media-one" aria-hidden="true" />
+          <ImageSlider
+            images={Array.from({ length: 11 }).map((_, i) => `galeria-${i + 1}.jpg`)}
+            interval={3800}
+            className="media-one"
+          />
           <div className="split-panel">
             <p className="split-caption">Comparte con nosotros este momento unico</p>
             <div className="paper-card center">
@@ -506,7 +594,7 @@ function App() {
                   🔍 Ir a ubicación
                 </a>
               </div>
-              <div className="location-photo photo-church" aria-hidden="true" />
+              <img className="location-photo photo-church" src="/iglesia.jpg" alt="Parroquia del Sagrado Corazón de Jesús" />
             </div>
           </div>
 
@@ -525,7 +613,7 @@ function App() {
                   🔍 Ir a ubicación
                 </a>
               </div>
-              <div className="location-photo photo-hacienda" aria-hidden="true" />
+              <img className="location-photo photo-hacienda" src="/venue-hacienda.jpg" alt="Hacienda Lagunillas" />
             </div>
           </div>
         </section>
@@ -535,40 +623,42 @@ function App() {
           className="reveal bg-[radial-gradient(circle_at_15%_20%,rgba(255,255,255,0.6),transparent_42%),radial-gradient(circle_at_85%_80%,rgba(191,163,123,0.2),transparent_35%),linear-gradient(180deg,#f7f2e9,#f1e8d7)] px-4 py-16"
         >
           <div className="mx-auto flex max-w-6xl flex-col items-center text-center">
-            <h2 className="text-[clamp(1.9rem,4.4vw,3rem)] uppercase tracking-[0.08em] text-[var(--gold)]">
+            <h2 className="text-[clamp(1.9rem,4.4vw,3rem)] uppercase tracking-[0.08em] text-(--gold)">
               Hospedaje
             </h2>
-            <p className="mt-3 w-full max-w-3xl text-balance leading-7 text-[var(--paper-text)]">
+            <p className="mt-3 w-full max-w-3xl text-balance leading-7 text-(--paper-text)">
               Conoce las opciones de alojamiento disponibles para ti y tus acompañantes.
             </p>
           </div>
 
           <div className="mx-auto mt-10 grid max-w-6xl gap-8 lg:grid-cols-2">
-            <div className="border border-[var(--paper-border)] bg-[var(--paper-bg)] p-8 text-center shadow-[0_18px_28px_-20px_rgba(50,38,23,0.35)] transition-transform duration-300 hover:-translate-y-2">
+            <div className="border border-(--paper-border) bg-(--paper-bg) p-8 text-center shadow-[0_18px_28px_-20px_rgba(50,38,23,0.35)] transition-transform duration-300 hover:-translate-y-2">
               <h3 className="script-text mb-4">Hacienda Lagunillas</h3>
               <a
-                className="grid gap-3 text-[var(--gold)] no-underline transition-transform duration-300 hover:-translate-y-1"
+                className="grid gap-3 text-(--gold) no-underline transition-transform duration-300 hover:-translate-y-1"
                 href="/info-hacienda.jpeg"
                 target="_blank"
                 rel="noreferrer"
                 aria-label="Abrir información completa de Hacienda Lagunillas"
               >
-                <div
-                  className="h-[350px] border border-[var(--paper-border)] bg-[rgba(255,255,255,0.7)] bg-contain bg-center bg-no-repeat"
-                  style={{ backgroundImage: "url('/info-hacienda.jpeg')" }}
+                <img
+                  className="h-87.5 border border-(--paper-border) bg-[rgba(255,255,255,0.7)] bg-contain bg-center bg-no-repeat"
+                  src="/info-hacienda.jpeg"
+                  alt="Información Hacienda Lagunillas"
+                  style={{ width: '100%', height: 350, objectFit: 'cover' }}
                 />
-                <span className="text-sm uppercase tracking-[0.08em] font-[var(--heading)]">Ver info completa</span>
+                <span className="text-sm uppercase tracking-[0.08em] font-(--heading)">Ver info completa</span>
               </a>
             </div>
 
-            <div className="border border-[var(--paper-border)] bg-[var(--paper-bg)] p-8 text-center shadow-[0_18px_28px_-20px_rgba(50,38,23,0.35)] transition-transform duration-300 hover:-translate-y-2">
+            <div className="border border-(--paper-border) bg-(--paper-bg) p-8 text-center shadow-[0_18px_28px_-20px_rgba(50,38,23,0.35)] transition-transform duration-300 hover:-translate-y-2">
               <h3 className="script-text mb-2">HS Hotsson Hotel</h3>
-              <p className="mb-3 uppercase tracking-[0.08em] text-[var(--gold)]">Reservaciones</p>
-              <p className="mx-auto max-w-xl leading-7 text-[var(--paper-text)]">
+              <p className="mb-3 uppercase tracking-[0.08em] text-(--gold)">Reservaciones</p>
+              <p className="mx-auto max-w-xl leading-7 text-(--paper-text)">
                 Nuestra oficina central de reservaciones está disponible de lunes a viernes de 08:00 a 20:00 hrs,
                 sábados y domingos de 08:00 a 17:00 hrs.
               </p>
-              <div className="mt-6 border-t border-[var(--paper-border)] pt-6 text-left text-[var(--paper-text)]">
+              <div className="mt-6 border-t border-(--paper-border) pt-6 text-left text-(--paper-text)">
                 <p className="my-2"><strong>Email:</strong> central_reservaciones@capitali.com</p>
                 <p className="my-2"><strong>Email:</strong> jdiaz@hotsson.com</p>
               </div>
@@ -583,13 +673,15 @@ function App() {
               <p className="script-text xl">Historia</p>
             </div>
             <div className="history-detail">
-              {timeline.map((item) => (
-                <article key={item.year}>
-                  <p className="year">{item.year}</p>
-                  <h3>{item.title}</h3>
-                  <p>{item.text}</p>
-                </article>
-              ))}
+              {(() => {
+                return timeline.map((item, idx) => (
+                  <article key={item.year}>
+                    <p className="year">{item.year}</p>
+                    <h3>{item.title}</h3>
+                    <p>{item.text}</p>
+                  </article>
+                ))
+              })()}
             </div>
           </article>
         </section>
@@ -601,33 +693,24 @@ function App() {
             realizar una muestra de cariño, estaremos muy agradecidos.
           </p>
           <div className="panel-actions">
-            <a className="button button-secondary" href="https://www.amazon.com.mx/" target="_blank" rel="noreferrer">
-              Ir a Amazon
-            </a>
-            <a className="button button-secondary" href="https://www.liverpool.com.mx/" target="_blank" rel="noreferrer">
-              Ir a Liverpool
+            <a className="button button-secondary" href="https://www.elpalaciodehierro.com/listaregalos#/event/408081" target="_blank" rel="noreferrer">
+              Ir a El Palacio de Hierro
             </a>
           </div>
           <p className="quote">
             &quot;La lluvia de sobres es la tradición de regalar dinero en efectivo en
             un sobre el día del evento&quot;.
           </p>
-          <details className="bank-details">
-            <summary>Ver datos bancarios</summary>
-            <p>Banco: BBVA</p>
-            <p>Cuenta: 0000000000</p>
-            <p>CLABE: 000000000000000000</p>
-          </details>
         </section>
 
-        <section id="dresscode" className="reveal bg-[var(--gold-bg)] px-4 py-12">
-          <article className="mx-auto flex max-w-6xl flex-col items-center gap-6 border border-[var(--paper-border)] bg-[var(--paper-bg)] p-8 text-center shadow-[0_18px_28px_-20px_rgba(50,38,23,0.35)]">
-            <h2 className="dresscode-title text-[clamp(1.8rem,4.6vw,3.6rem)] italic text-[var(--paper-text-dark)]">
+        <section id="dresscode" className="reveal bg-(--gold-bg) px-4 py-12">
+          <article className="mx-auto flex max-w-6xl flex-col items-center gap-6 border border-(--paper-border) bg-(--paper-bg) p-8 text-center shadow-[0_18px_28px_-20px_rgba(50,38,23,0.35)]">
+            <h2 className="dresscode-title text-[clamp(1.8rem,4.6vw,3.6rem)] italic text-(--paper-text-dark)">
               Código de vestimenta
             </h2>
             <div className="w-full">
               <img
-                className="mx-auto block h-auto w-full max-w-[920px] rounded-[0.6rem] border border-[var(--paper-border)] bg-white object-contain shadow-[0_12px_30px_rgba(0,0,0,0.08)]"
+                className="mx-auto block h-auto w-full max-w-230 rounded-[0.6rem] border border-(--paper-border) bg-white object-contain shadow-[0_12px_30px_rgba(0,0,0,0.08)]"
                 src="/dress-code.png"
                 alt="Dress code"
               />
@@ -655,6 +738,11 @@ function App() {
           <div className="gallery-grid" role="list" aria-label="Galería de recuerdos">
             {Array.from({ length: 8 }).map((_, index) => (
               <div key={`photo-${index + 1}`} role="listitem" className="gallery-item">
+                <img
+                  src={`/galeria-${index + 1}.jpg`}
+                  alt={`Foto ${index + 1}`}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
                 <span>Foto {index + 1}</span>
               </div>
             ))}
@@ -665,30 +753,14 @@ function App() {
           id="contactos"
           className="reveal w-full bg-[radial-gradient(circle_at_15%_20%,rgba(255,255,255,0.6),transparent_42%),radial-gradient(circle_at_85%_80%,rgba(191,163,123,0.2),transparent_35%),linear-gradient(180deg,#f7f2e9,#f1e8d7)] px-4 py-16"
         >
-          <div className="mx-auto flex max-w-7xl flex-col items-center rounded-none border border-[var(--paper-border)] bg-[rgba(255,255,255,0.92)] p-8 text-center shadow-[0_18px_28px_-20px_rgba(50,38,23,0.35)]">
-            <h2 className="script-text text-[clamp(2rem,5.5vw,4.1rem)] text-[var(--paper-text-dark)]"><SectionIcon type="contacts" />Contactos</h2>
-            <p className="mt-3 w-full max-w-3xl text-center leading-7 text-[var(--paper-text)] text-balance">
+          <div className="mx-auto flex max-w-7xl flex-col items-center rounded-none border border-(--paper-border) bg-[rgba(255,255,255,0.92)] p-8 text-center shadow-[0_18px_28px_-20px_rgba(50,38,23,0.35)]">
+            <h2 className="script-text text-[clamp(2rem,5.5vw,4.1rem)] text-(--paper-text-dark)"><SectionIcon type="contacts" />Contactos</h2>
+            <p className="mt-3 w-full max-w-3xl text-center leading-7 text-(--paper-text) text-balance">
               Si necesitas ayuda con tu asistencia o con la hacienda, aquí están los contactos directos.
             </p>
             <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
               <a
-                className="flex min-h-[88px] items-center justify-center border border-[color-mix(in_srgb,var(--gold)_65%,var(--paper-border))] bg-white/85 px-4 py-4 font-[var(--heading)] text-lg text-[var(--gold)] no-underline shadow-[0_12px_26px_rgba(0,0,0,0.06)] transition duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-[0_18px_30px_rgba(0,0,0,0.1)]"
-                href="https://wa.me/50684200184"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Novia
-              </a>
-              <a
-                className="flex min-h-[88px] items-center justify-center border border-[color-mix(in_srgb,var(--gold)_65%,var(--paper-border))] bg-white/85 px-4 py-4 font-[var(--heading)] text-lg text-[var(--gold)] no-underline shadow-[0_12px_26px_rgba(0,0,0,0.06)] transition duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-[0_18px_30px_rgba(0,0,0,0.1)]"
-                href="https://wa.me/5214421192054"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Novio
-              </a>
-              <a
-                className="flex min-h-[88px] items-center justify-center border border-[color-mix(in_srgb,var(--gold)_65%,var(--paper-border))] bg-white/85 px-4 py-4 font-[var(--heading)] text-lg text-[var(--gold)] no-underline shadow-[0_12px_26px_rgba(0,0,0,0.06)] transition duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-[0_18px_30px_rgba(0,0,0,0.1)]"
+                className="flex min-h-22 items-center justify-center border border-[color-mix(in_srgb,var(--gold)_65%,var(--paper-border))] bg-white/85 px-4 py-4 font-(--heading) text-lg text-(--gold) no-underline shadow-[0_12px_26px_rgba(0,0,0,0.06)] transition duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-[0_18px_30px_rgba(0,0,0,0.1)]"
                 href="https://wa.me/5215623617972"
                 target="_blank"
                 rel="noreferrer"
@@ -696,12 +768,28 @@ function App() {
                 Wedding Planner - Ericka
               </a>
               <a
-                className="flex min-h-[88px] items-center justify-center border border-[color-mix(in_srgb,var(--gold)_65%,var(--paper-border))] bg-white/85 px-4 py-4 font-[var(--heading)] text-lg text-[var(--gold)] no-underline shadow-[0_12px_26px_rgba(0,0,0,0.06)] transition duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-[0_18px_30px_rgba(0,0,0,0.1)]"
+                className="flex min-h-22 items-center justify-center border border-[color-mix(in_srgb,var(--gold)_65%,var(--paper-border))] bg-white/85 px-4 py-4 font-(--heading) text-lg text-(--gold) no-underline shadow-[0_12px_26px_rgba(0,0,0,0.06)] transition duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-[0_18px_30px_rgba(0,0,0,0.1)]"
                 href="https://wa.me/5217771124582"
                 target="_blank"
                 rel="noreferrer"
               >
                 Jonathan Ramírez - Reservas Hacienda
+              </a>
+              <a
+                className="flex min-h-22 items-center justify-center border border-[color-mix(in_srgb,var(--gold)_65%,var(--paper-border))] bg-white/85 px-4 py-4 font-(--heading) text-lg text-(--gold) no-underline shadow-[0_12px_26px_rgba(0,0,0,0.06)] transition duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-[0_18px_30px_rgba(0,0,0,0.1)]"
+                href="https://wa.me/50684200184"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Novia
+              </a>
+              <a
+                className="flex min-h-22 items-center justify-center border border-[color-mix(in_srgb,var(--gold)_65%,var(--paper-border))] bg-white/85 px-4 py-4 font-(--heading) text-lg text-(--gold) no-underline shadow-[0_12px_26px_rgba(0,0,0,0.06)] transition duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-[0_18px_30px_rgba(0,0,0,0.1)]"
+                href="https://wa.me/5214421192054"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Novio
               </a>
             </div>
           </div>
