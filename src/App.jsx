@@ -483,7 +483,7 @@ function App() {
               ) : null}
             </div>
 
-            <button type="button" onClick={openRsvpModal} className="button button-primary">
+            <button type="button" onClick={openRsvpModal} className="button button-primary confirm-attendance-button">
               Confirmar asistencia
             </button>
           </div>
