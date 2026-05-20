@@ -666,26 +666,6 @@ function App() {
           </div>
         </section>
 
-        <section id="historia" className="paper-wrap reveal">
-          <article className="history-card">
-            <div>
-              <h2 className="gold-title">Nuestra</h2>
-              <p className="script-text xl">Historia</p>
-            </div>
-            <div className="history-detail">
-              {(() => {
-                return timeline.map((item, idx) => (
-                  <article key={item.year}>
-                    <p className="year">{item.year}</p>
-                    <h3>{item.title}</h3>
-                    <p>{item.text}</p>
-                  </article>
-                ))
-              })()}
-            </div>
-          </article>
-        </section>
-
         <section id="regalos" className="panel reveal">
           <h2>Mesa de Regalos</h2>
           <p>

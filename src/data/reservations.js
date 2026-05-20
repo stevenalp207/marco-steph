@@ -28,83 +28,49 @@ export const guestReservations = [
   { reservation: 'MRC-1027', name: 'Francisco Castro', passes: 1 },
   { reservation: 'MRC-1028', name: 'Daniel Leon', passes: 1 },
 
-  { reservation: 'MRC-1029', name: 'Familia Mora (Marco Mora, Carmen Gonzalez, Margartia Mora, Maria del Carmen Mora, Santiago Mora, Emilio Mora, Mama Mary)', passes: 7 },
+  {
+    reservation: 'MRC-1029',
+    name: 'Familia Mora (Marco Mora, Carmen Gonzalez, Margartia Mora, Maria del Carmen Mora, Santiago Mora, Emilio Mora, Mama Mary)',
+    passes: 7
+  },
 
   { reservation: 'MRC-1030', name: 'Jorge Gonzalez', passes: 2 },
+  { reservation: 'MRC-1031', name: 'Antonio Gonzalez', passes: 2 },
 
-  { reservation: 'MRC-1031', name: 'Antonio Gonzalez', passes: 4 },
+  {
+    reservation: 'MRC-1032',
+    name: 'Patricia Guzman y Juan Carlos Mora Moreno',
+    passes: 2
+  },
 
-  { reservation: 'MRC-1032', name: 'Tio Cocoro', passes: 5 },
+  {
+    reservation: 'MRC-1033',
+    name: 'Familia Mora Moreno (Susana Mora Moreno y Jaime, Carmen Mora Moreno, Teresa Mora Moreno, Lourdes Mora Moreno, Veronica Mora Moreno, Gerardo Mora Moreno, Elena Mora Moreno y su Esposo)',
+    passes: 9
+  },
 
-  { reservation: 'MRC-1033', name: 'Tio Memo', passes: 6 },
+  { reservation: 'MRC-1034', name: 'Ernestina', passes: 1 },
 
-  { reservation: 'MRC-1034', name: 'Tia Susy', passes: 5 },
+  { reservation: 'MRC-1035', name: 'Cynthia Fierro', passes: 2 },
+  { reservation: 'MRC-1036', name: 'Luis Vega', passes: 1 },
+  { reservation: 'MRC-1037', name: 'Mario Sanchez', passes: 1 },
+  { reservation: 'MRC-1038', name: 'Maricela Reyes', passes: 1 },
+  { reservation: 'MRC-1039', name: 'Clara', passes: 2 },
+  { reservation: 'MRC-1040', name: 'Hugo', passes: 1 },
+  { reservation: 'MRC-1041', name: 'Jorge Hurtado', passes: 2 },
+  { reservation: 'MRC-1042', name: 'Sergio Anzaldo', passes: 2 },
+  { reservation: 'MRC-1043', name: 'Ingrid Zuleta', passes: 2 },
+  { reservation: 'MRC-1044', name: 'Bayron Duran', passes: 2 },
+  { reservation: 'MRC-1045', name: 'Fernando Sosa', passes: 2 },
+  { reservation: 'MRC-1046', name: 'Francisco Perez', passes: 2 },
+  { reservation: 'MRC-1047', name: 'Oliver Rodriguez', passes: 2 },
+  { reservation: 'MRC-1048', name: 'Braulio Hernandez', passes: 2 },
+  { reservation: 'MRC-1049', name: 'Ericka Ruiz', passes: 2 },
+  { reservation: 'MRC-1050', name: 'Lourdes Duran', passes: 2 },
+  { reservation: 'MRC-1051', name: 'Jorge Espinoza', passes: 2 },
 
-  { reservation: 'MRC-1035', name: 'Tia Car', passes: 2 },
-
-  { reservation: 'MRC-1036', name: 'Tia Tere', passes: 8 },
-
-  { reservation: 'MRC-1037', name: 'Tia Piri', passes: 4 },
-
-  { reservation: 'MRC-1038', name: 'Tia Vero', passes: 6 },
-
-  { reservation: 'MRC-1039', name: 'Tio Colay', passes: 5 },
-
-  { reservation: 'MRC-1040', name: 'Tia Elena', passes: 7 },
-
-  { reservation: 'MRC-1041', name: 'Tia Angelina', passes: 1 },
-
-  { reservation: 'MRC-1042', name: 'Tia Pilar', passes: 1 },
-
-  { reservation: 'MRC-1043', name: 'Cynthia Fierro', passes: 2 },
-
-  { reservation: 'MRC-1044', name: 'Luis Vega', passes: 1 },
-
-  { reservation: 'MRC-1045', name: 'Mario Sanchez', passes: 1 },
-
-  { reservation: 'MRC-1046', name: 'Maricela Reyes', passes: 1 },
-
-  { reservation: 'MRC-1047', name: 'Clara', passes: 2 },
-
-  { reservation: 'MRC-1048', name: 'Hugo', passes: 1 },
-
-  { reservation: 'MRC-1049', name: 'Carina Brindis', passes: 2 },
-
-  { reservation: 'MRC-1050', name: 'Diego Serafin', passes: 2 },
-
-  { reservation: 'MRC-1051', name: 'Pachecho', passes: 2 },
-
-  { reservation: 'MRC-1052', name: 'Hernan', passes: 1 },
-
-  { reservation: 'MRC-1053', name: 'Minerva', passes: 2 },
-
-  { reservation: 'MRC-1054', name: 'Jorge Hurtado', passes: 2 },
-
-  { reservation: 'MRC-1055', name: 'Sergio Anzaldo', passes: 2 },
-
-  { reservation: 'MRC-1056', name: 'Ingrid Zuleta', passes: 2 },
-
-  { reservation: 'MRC-1057', name: 'Bayron Duran', passes: 2 },
-
-  { reservation: 'MRC-1058', name: 'Fernando Sosa', passes: 2 },
-
-  { reservation: 'MRC-1059', name: 'Paco Perez', passes: 2 },
-
-  { reservation: 'MRC-1060', name: 'Oliver Rodriguez', passes: 2 },
-
-  { reservation: 'MRC-1061', name: 'Braulio', passes: 2 },
-
-  { reservation: 'MRC-1062', name: 'Ericka', passes: 2 },
-
-  { reservation: 'MRC-1063', name: 'Alejandro Lopez', passes: 2 },
-
-  { reservation: 'MRC-1064', name: 'Lourdes Duran', passes: 1 },
-
-  { reservation: 'MRC-1065', name: 'Jorge Espinoza', passes: 2 },
-
-  { reservation: 'MRC-1066', name: 'Yatzira Camacho', passes: 2 },
-
-  { reservation: 'MRC-1067', name: 'Gaby Dominguez', passes: 2 },
+  { reservation: 'MRC-1052', name: 'Mauricio Suarez', passes: 1 },
+  { reservation: 'MRC-1053', name: 'Mexitli', passes: 1 },
 ]
 
 export function normalizeText(value = '') {
