@@ -783,11 +783,6 @@ function App() {
           </div>
         </section>
       </main>
-
-      <footer className="wedding-footer">
-        <p>Boda Steph &amp; Marco</p>
-      </footer>
-
       {isRsvpModalOpen ? (
         <div className="rsvp-modal" role="dialog" aria-modal="true" aria-labelledby="rsvp-modal-title">
           <div className="rsvp-modal-backdrop" onClick={closeRsvpModal} aria-hidden="true" />
