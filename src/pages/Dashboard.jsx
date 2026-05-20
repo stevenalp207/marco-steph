@@ -129,7 +129,7 @@ export default function Dashboard() {
         confirmedPasses,
         declinedPasses,
         pendingPasses,
-        contactPhone: response?.contact_phone ?? '',
+        contactPhone: reservation.contactPhone ?? response?.contact_phone ?? '',
         notes: response?.notes ?? '',
         respondedAt: response?.responded_at ?? '',
       }
@@ -221,10 +221,10 @@ export default function Dashboard() {
                         target="_blank"
                         rel="noreferrer"
                         aria-label={`Enviar mensaje por WhatsApp a ${row.name}`}
-                        title={row.contactPhone ? 'Reenviar por WhatsApp' : 'Abrir WhatsApp con mensaje prellenado'}
+                        title={row.contactPhone ? 'Abrir chat directo por WhatsApp' : 'Abrir WhatsApp con mensaje prellenado'}
                       >
                         <WhatsAppIcon />
-                        <span>Reenviar</span>
+                        <span>{row.contactPhone ? 'Enviar' : 'Reenviar'}</span>
                       </a>
                     </td>
                   </tr>
