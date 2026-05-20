@@ -44,6 +44,41 @@ function formatDate(value) {
   })
 }
 
+function normalizePhoneNumber(value = '') {
+  return value.replace(/\D/g, '')
+}
+
+function buildWhatsappMessage(row) {
+  return [
+    `Hola ${row.name}. Te hemos invitado a nuestra boda que será el 21 de noviembre.`,
+    '',
+    'En la página encontrarás diferente información como hospedaje, mesa de regalos, dresscode y, lo más importante, en el inicio podrás confirmar asistencia.',
+    '',
+    `Código de reserva: ${row.reservation}`,
+    '',
+    'Tutorial rápido:',
+    '1. Pon tu código de reserva.',
+    '2. Dale a buscar.',
+    '3. Luego ve a "Confirmar asistencia" y llena los datos.',
+  ].join('\n')
+}
+
+function buildWhatsappHref(row) {
+  const message = encodeURIComponent(buildWhatsappMessage(row))
+  const phone = normalizePhoneNumber(row.contactPhone)
+
+  return phone ? `https://wa.me/${phone}?text=${message}` : `https://wa.me/?text=${message}`
+}
+
+function WhatsAppIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" className="whatsapp-icon">
+      <path d="M20.5 11.9a8.4 8.4 0 0 1-12.4 7.3L4 20l1-4a8.4 8.4 0 1 1 15.5-4.1Z" fill="currentColor" />
+      <path d="M9.2 8.7c.2-.4.4-.4.6-.4h.5c.2 0 .4 0 .5.3l.7 1.7c.1.3 0 .5-.1.7l-.4.5c-.1.1-.2.3-.1.5.2.4.8 1.4 1.8 2.3 1 .9 2.1 1.4 2.5 1.6.2.1.4 0 .5-.1l.6-.7c.2-.2.4-.3.7-.2l1.8.8c.2.1.3.3.3.5 0 .6-.2 1.1-.6 1.4-.4.3-1 .5-1.7.5-1.2 0-2.8-.6-4.4-1.8-1.6-1.2-2.8-2.6-3.7-4.2-.9-1.6-1.2-3-.9-4 .3-.8.8-1.3 1.2-1.5Z" fill="#fff" opacity="0.95" />
+    </svg>
+  )
+}
+
 export default function Dashboard() {
   const [responses, setResponses] = useState([])
   const [isLoading, setIsLoading] = useState(true)
@@ -157,9 +192,8 @@ export default function Dashboard() {
                   <th>Pases</th>
                   <th>Estado</th>
                   <th>Acomp.</th>
-                  <th>Teléfono</th>
-                  <th>Comentario</th>
                   <th>Fecha respuesta</th>
+                  <th>WhatsApp</th>
                 </tr>
               </thead>
               <tbody>
@@ -179,9 +213,20 @@ export default function Dashboard() {
                       </span>
                     </td>
                     <td>{row.companionsConfirmed}</td>
-                    <td>{row.contactPhone || '-'}</td>
-                    <td>{row.notes || '-'}</td>
                     <td>{formatDate(row.respondedAt)}</td>
+                    <td className="dashboard-action-cell">
+                      <a
+                        className="dashboard-whatsapp-button"
+                        href={buildWhatsappHref(row)}
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label={`Enviar mensaje por WhatsApp a ${row.name}`}
+                        title={row.contactPhone ? 'Reenviar por WhatsApp' : 'Abrir WhatsApp con mensaje prellenado'}
+                      >
+                        <WhatsAppIcon />
+                        <span>Reenviar</span>
+                      </a>
+                    </td>
                   </tr>
                 ))}
               </tbody>

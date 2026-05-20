@@ -8,32 +8,11 @@ const weddingDate = new Date('2026-11-21T16:00:00-06:00')
 const itinerary = [
   { event: 'Ceremonia', time: '4:00 PM', align: 'left', icon: 'rings' },
   { event: 'Coctel de bienvenida', time: '5:00 PM', align: 'right', icon: 'toast' },
-  { event: 'Acomodo de invitados', time: '5:45 PM', align: 'left', icon: 'clock' },
-  { event: 'Entrada de novios', time: '6:10 PM', align: 'right', icon: 'toast' },
-  { event: 'Banquete', time: '6:10 PM', align: 'left', icon: 'meal' },
-  { event: 'Vals', time: '7:00 PM', align: 'right', icon: 'music' },
-  { event: 'Se abre pista', time: '7:25 PM', align: 'left', icon: 'music' },
-  { event: 'Menu de trasnochados', time: '11:30 PM', align: 'right', icon: 'meal' },
+  { event: 'Entrada de novios', time: '6:10 PM', align: 'left', icon: 'toast' },
+  { event: 'Banquete', time: '6:15 PM', align: 'right', icon: 'meal' },
+  { event: 'Vals', time: '7:00 PM', align: 'left', icon: 'music' },
+  { event: 'Se abre pista', time: '7:25 PM', align: 'right', icon: 'music' },
   { event: 'Fin de la fiesta', time: '1:00 AM', align: 'left', icon: 'clock' },
-]
-
-
-const timeline = [
-  {
-    year: '2018',
-    title: 'Nos conocimos',
-    text: 'Después de algunos días hablando por mensajes, tuvimos nuestra primera salida a un picnic en lo alto de la ciudad.',
-  },
-  {
-    year: '2021',
-    title: 'Construimos nuestro hogar',
-    text: 'Entre viajes, desvelos y muchas risas fuimos descubriendo que queríamos compartir cada etapa juntos.',
-  },
-  {
-    year: '2026',
-    title: 'Nos casamos',
-    text: 'Hoy celebramos el inicio de una nueva familia con las personas más importantes de nuestras vidas.',
-  },
 ]
 
 function getCountdown() {
@@ -260,10 +239,10 @@ function App() {
   const [selectedGuestKey, setSelectedGuestKey] = useState('')
   const [attendanceStatus, setAttendanceStatus] = useState('si')
   const [companionCount, setCompanionCount] = useState('0')
-  const [contactPhone, setContactPhone] = useState('')
-  const [rsvpComment, setRsvpComment] = useState('')
   const [isSubmittingRsvp, setIsSubmittingRsvp] = useState(false)
   const [rsvpMessage, setRsvpMessage] = useState({ type: '', text: '' })
+  const [copiedSinpe, setCopiedSinpe] = useState(false)
+  const [copiedClabe, setCopiedClabe] = useState(false)
 
   const reservationCodeLookup = guestLookup.trim().toUpperCase()
   const guestResults = reservationCodeLookup
@@ -274,7 +253,9 @@ function App() {
     (reservation) => makeReservationKey(reservation.reservation, reservation.name) === selectedGuestKey,
   )
   const maxCompanions = selectedGuest?.passes ?? 0
-  const companionOptions = Array.from({ length: maxCompanions + 1 }, (_, index) => String(index))
+  const companionOptions = attendanceStatus === 'si' && selectedGuest
+    ? Array.from({ length: maxCompanions }, (_, index) => String(index + 1))
+    : ['0']
 
   useEffect(() => {
     const intervalId = window.setInterval(() => {
@@ -333,7 +314,14 @@ function App() {
       return
     }
 
-    if (Number(companionCount) > selectedGuest.passes) {
+    const currentCount = Number(companionCount)
+
+    if (currentCount < 1) {
+      setCompanionCount('1')
+      return
+    }
+
+    if (currentCount > selectedGuest.passes) {
       setCompanionCount(String(selectedGuest.passes))
     }
   }, [attendanceStatus, companionCount, selectedGuest])
@@ -342,6 +330,31 @@ function App() {
     event.preventDefault()
     setGuestLookup(guestInput)
     setRsvpMessage({ type: '', text: '' })
+  }
+
+  function copyToClipboard(text, setCopied) {
+    if (navigator && navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => {
+        setCopied(true)
+        window.setTimeout(() => setCopied(false), 1800)
+      }).catch((err) => {
+        console.error('Clipboard write failed', err)
+      })
+      return
+    }
+
+    try {
+      const textarea = document.createElement('textarea')
+      textarea.value = text
+      document.body.appendChild(textarea)
+      textarea.select()
+      document.execCommand('copy')
+      document.body.removeChild(textarea)
+      setCopied(true)
+      window.setTimeout(() => setCopied(false), 1800)
+    } catch (err) {
+      console.error('Fallback copy failed', err)
+    }
   }
 
   function openRsvpModal() {
@@ -374,16 +387,16 @@ function App() {
         passes_assigned: selectedGuest.passes,
         attendance_status: attendanceStatus,
         companions_confirmed: attendanceStatus === 'si' ? Number(companionCount) : 0,
-        contact_phone: contactPhone.trim() || null,
-        notes: rsvpComment.trim() || null,
         responded_at: new Date().toISOString(),
       })
 
       setRsvpMessage({
         type: 'success',
-        text: 'Tu respuesta fue registrada. Gracias por confirmar.',
+        text:
+          attendanceStatus === 'si'
+            ? 'Los esperamos en nuestra boda 🇨🇷 🇲🇽'
+            : 'Tu respuesta fue registrada. Gracias por confirmar.',
       })
-      closeRsvpModal()
     } catch (error) {
       const status = error?.status ?? error?.code
       const isUnauthorized = status === 401 || status === '401'
@@ -438,7 +451,7 @@ function App() {
               </form>
 
               <p className="text-sm text-white/75">
-                Ingresa el código exacto de tu reserva. Si tu reserva incluye esposo o esposa, aparecerá con 2 pases.
+                Ingresa el código exacto de tu reserva. Si tu reserva incluye acompañante, aparecerá con 2 pases.
               </p>
 
               {guestLookup ? (
@@ -520,7 +533,7 @@ function App() {
             className="media-one"
           />
           <div className="split-panel">
-            <p className="split-caption">Comparte con nosotros este momento unico</p>
+            <p className="split-caption">Comparte con nosotros este momento único</p>
             <div className="paper-card center">
               <h2 className="gold-title">Con la bendicion de nuestros padres</h2>
               <h3 className="script-text small">Padres de la novia</h3>
@@ -681,6 +694,33 @@ function App() {
             &quot;La lluvia de sobres es la tradición de regalar dinero en efectivo en
             un sobre el día del evento&quot;.
           </p>
+            <div className="mt-4 text-(--paper-text)">
+              <p className="my-2">
+                <strong>Para personas de Costa Rica:</strong> SINPE Móvil{' '}
+                <button
+                  type="button"
+                  className="inline-block underline hover:no-underline"
+                  onClick={() => copyToClipboard('84200184', setCopiedSinpe)}
+                  aria-label="Copiar SINPE Móvil 84200184"
+                >
+                  <strong>84200184</strong>
+                </button>
+                {copiedSinpe && <span className="ml-2 text-sm text-(--gold)">¡Copiado!</span>}
+              </p>
+
+              <p className="my-2">
+                <strong>Para personas de México:</strong> Cuenta HSBC (CLABE){' '}
+                <button
+                  type="button"
+                  className="inline-block underline hover:no-underline"
+                  onClick={() => copyToClipboard('021680064515000150', setCopiedClabe)}
+                  aria-label="Copiar CLABE 021680064515000150"
+                >
+                  <strong>021680064515000150</strong>
+                </button>
+                {copiedClabe && <span className="ml-2 text-sm text-(--gold)">¡Copiado!</span>}
+              </p>
+            </div>
         </section>
 
         <section id="dresscode" className="reveal bg-(--gold-bg) px-4 py-12">
@@ -707,7 +747,6 @@ function App() {
               <li>• Confirmar asistencia con anticipación para una mejor organización.</li>
               <li>• Evitar llevar acompañantes no incluidos en la invitación.</li>
               <li>• Seguir las indicaciones del personal del evento.</li>
-              <li>• Respetar la hora de cierre del evento.</li>
             </ol>
           </article>
         </section>
@@ -855,24 +894,6 @@ function App() {
               ) : (
                 <p className="rsvp-helper-text">Primero busca tu reserva para habilitar los pases disponibles.</p>
               )}
-
-                  <label htmlFor="rsvp-phone">Teléfono (opcional)</label>
-              <input
-                id="rsvp-phone"
-                type="tel"
-                value={contactPhone}
-                onChange={(event) => setContactPhone(event.target.value)}
-                placeholder="Ejemplo: 4421234567"
-              />
-
-              <label htmlFor="rsvp-comment">Comentario (opcional)</label>
-              <textarea
-                id="rsvp-comment"
-                value={rsvpComment}
-                onChange={(event) => setRsvpComment(event.target.value)}
-                rows={3}
-                placeholder="Alergias, dudas o mensaje para los novios"
-              />
 
               <button className="button button-primary" type="submit" disabled={isSubmittingRsvp}>
                 {isSubmittingRsvp ? 'Guardando...' : 'Guardar respuesta'}
