@@ -801,6 +801,70 @@
 	letter-spacing: 0.16em;
 }
 
+/* Responsive adjustments */
+@media (max-width: 900px) {
+	.split-section {
+		grid-template-columns: 1fr;
+	}
+
+	.split-media {
+		height: auto;
+		min-height: 280px;
+	}
+
+	.split-panel {
+		padding: 1.25rem;
+	}
+}
+
+@media (max-width: 720px) {
+	.countdown-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 0.5rem;
+	}
+
+	.rsvp-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (max-width: 520px) {
+	.countdown-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.guest-box {
+		padding: 0.8rem;
+	}
+
+	.rsvp-modal-content {
+		padding: 0.6rem;
+	}
+
+	.menu-toggle {
+		top: 0.6rem;
+		right: 0.6rem;
+	}
+
+	.wedding-nav {
+		right: 0.6rem;
+		top: 3rem;
+		width: calc(100vw - 1rem);
+		max-height: 60svh;
+	}
+
+	.slider-control {
+		width: 36px;
+		height: 36px;
+		font-size: 1.1rem;
+	}
+
+	.slider-indicators {
+		bottom: 8px;
+		gap: 6px;
+	}
+}
+
 .two-tone {
 	background: linear-gradient(90deg, var(--gold-bg) 0 15%, var(--paper-bg) 15% 85%, var(--gold-bg) 85% 100%);
 	padding: 2.4rem 1rem;
