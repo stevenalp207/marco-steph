@@ -50,7 +50,7 @@ function normalizePhoneNumber(value = '') {
 
 function buildWhatsappMessage(row) {
   return [
-    `Hola ${row.name}. Te hemos invitado a nuestra boda que será el 21 de noviembre.`,
+    `Hola ${row.name}. Has sido invitado a la boda de Steph y Marco que será el 21 de noviembre.`,
     '',
     'En la página encontrarás diferente información como hospedaje, mesa de regalos, dresscode y, lo más importante, en el inicio podrás confirmar asistencia.',
     '',
