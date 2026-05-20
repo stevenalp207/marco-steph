@@ -144,6 +144,7 @@
 	z-index: 1;
 	text-align: center;
 	display: grid;
+	justify-items: center;
 	gap: 1rem;
 	color: #fff;
 	max-width: 920px;
@@ -214,7 +215,17 @@
 	backdrop-filter: blur(3px);
 	padding: 0.9rem;
 	display: grid;
+	justify-items: center;
 	gap: 0.35rem;
+}
+
+.guest-box form {
+	width: 100%;
+}
+
+.guest-box label,
+.guest-box > p {
+	text-align: center;
 }
 
 .confirm-attendance-button {
