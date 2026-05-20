@@ -515,7 +515,7 @@ function App() {
 
         <section className="split-section beige reveal">
           <ImageSlider
-            images={Array.from({ length: 11 }).map((_, i) => `galeria-${i + 1}.jpg`)}
+            images={Array.from({ length: 10 }).map((_, i) => `galeria-${i + 1}.jpg`)}
             interval={3800}
             className="media-one"
           />
@@ -702,12 +702,12 @@ function App() {
           <article className="notes-card big">
             <h3 className="script-text">A tomar en cuenta</h3>
             <ol>
-              <li>Llegar al menos 20 minutos antes del inicio del evento.</li>
-              <li>Seguir el código de vestimenta especificado en la invitación.</li>
-              <li>Confirmar asistencia con anticipación para una mejor organización.</li>
-              <li>Evitar llevar acompañantes no incluidos en la invitación.</li>
-              <li>Seguir las indicaciones del personal del evento.</li>
-              <li>Respetar la hora de cierre del evento.</li>
+              <li>• Llegar al menos 20 minutos antes del inicio del evento.</li>
+              <li>• Seguir el código de vestimenta especificado en la invitación.</li>
+              <li>• Confirmar asistencia con anticipación para una mejor organización.</li>
+              <li>• Evitar llevar acompañantes no incluidos en la invitación.</li>
+              <li>• Seguir las indicaciones del personal del evento.</li>
+              <li>• Respetar la hora de cierre del evento.</li>
             </ol>
           </article>
         </section>
