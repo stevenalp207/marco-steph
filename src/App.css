@@ -1222,10 +1222,12 @@ blockquote cite {
 	font-size: 0.75rem;
 }
 
-/* Prevent horizontal overflow on mobile devices and ensure images scale */
+/* Keep mobile scrolling/zooming usable while avoiding accidental overflow */
 html, body, #root {
-  max-width: 100%;
-  overflow-x: hidden;
+	max-width: 100%;
+	overflow-x: auto;
+	touch-action: pan-y pinch-zoom;
+	overscroll-behavior-x: auto;
 }
 
 img, picture, video {
@@ -1236,7 +1238,7 @@ img, picture, video {
 
 /* Small safeguard for fixed/absolute elements that might escape viewport */
 .invitation-main, .screen, .split-section, .paper-wrap {
-  overflow-x: hidden;
+	overflow-x: clip;
 }
 
 .wedding-footer p {
