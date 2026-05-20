@@ -1,6 +1,7 @@
 .invitation-main {
 	display: grid;
 	gap: 0;
+	width: 100%;
 }
 
 .wedding-header {
@@ -100,6 +101,7 @@
 	place-items: center;
 	overflow: hidden;
 	padding: 8rem 1rem 3rem;
+	width: 100%;
 }
 
 .overlay {
@@ -145,6 +147,8 @@
 	gap: 1rem;
 	color: #fff;
 	max-width: 920px;
+	width: min(920px, calc(100% - 1rem));
+	margin-inline: auto;
 }
 
 .screen-content.compact {
