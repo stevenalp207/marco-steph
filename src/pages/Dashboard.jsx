@@ -57,7 +57,7 @@ function buildWhatsappMessage(row) {
     '',
     'En la página web encontrarás toda la información importante: hospedaje, mesa de regalos, dress code y, lo más importante, la confirmación de asistencia.',
     '',
-    '🌐 Página de la boda:',
+    'Página de la boda:',
     'https://steph-marco.vercel.app/',
     '',
     `Código de reserva: ${row.reservation}`,
