@@ -1698,6 +1698,44 @@ img, picture, video {
 		scroll-behavior: auto !important;
 	}
 
+
+/* Compact styles for Mesa de Regalos on small screens */
+@media (max-width: 520px) {
+	#regalos.panel {
+		padding: 0.8rem 0.6rem;
+	}
+
+	#regalos.panel h2 {
+		font-size: 1.05rem;
+		letter-spacing: 0.03em;
+	}
+
+	#regalos.panel > p {
+		font-size: 0.88rem;
+		margin-top: 0.35rem;
+		max-width: 36ch;
+	}
+
+	#regalos .panel-actions {
+		margin-top: 0.4rem;
+		gap: 0.45rem;
+	}
+
+	#regalos .panel-actions .button {
+		padding: 0.36rem 0.6rem;
+		font-size: 0.64rem;
+	}
+
+	#regalos .quote {
+		margin-top: 0.5rem;
+		font-size: 0.86rem;
+	}
+
+	#regalos .mt-4 p {
+		font-size: 0.86rem;
+		margin: 0.3rem 0;
+	}
+}
 	.intro-screen,
 	.history-detail article {
 		background-attachment: scroll;
