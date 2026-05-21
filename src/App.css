@@ -1213,10 +1213,7 @@ blockquote cite {
 /* Keep the page anchored to the viewport width on mobile browsers */
 html, body, #root {
 	width: 100%;
-	max-width: 100%;
 	overflow-x: hidden;
-	touch-action: pan-y pinch-zoom;
-	overscroll-behavior-x: none;
 }
 
 img, picture, video {
