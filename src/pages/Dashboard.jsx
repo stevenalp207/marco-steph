@@ -50,16 +50,25 @@ function normalizePhoneNumber(value = '') {
 
 function buildWhatsappMessage(row) {
   return [
-    `Hola ${row.name}. Has sido invitado a la boda de Steph y Marco que será el 21 de noviembre.`,
+    `Hola ${row.name}`,
     '',
-    'En la página encontrarás diferente información como hospedaje, mesa de regalos, dresscode y, lo más importante, en el inicio podrás confirmar asistencia.',
+    '¡Estás invitad@ a celebrar la boda de Steph & Marco!',
+    'La celebración será el *21 de noviembre* y nos haría muchísima ilusión contar contigo en este día tan especial.',
+    '',
+    'En la página web encontrarás toda la información importante: hospedaje, mesa de regalos, dress code y, lo más importante, la confirmación de asistencia.',
+    '',
+    '🌐 Página de la boda:',
+    'https://steph-marco.vercel.app/',
     '',
     `Código de reserva: ${row.reservation}`,
     '',
-    'Tutorial rápido:',
-    '1. Pon tu código de reserva.',
-    '2. Dale a buscar.',
-    '3. Luego ve a "Confirmar asistencia" y llena los datos.',
+    'Para confirmar asistencia:',
+    '1. Entra a la página.',
+    '2. Ingresa tu código de reserva.',
+    '3. Presiona "Buscar".',
+    '4. Ve a "Confirmar asistencia" y completa tus datos.',
+    '',
+    '¡Esperamos celebrar contigo!'
   ].join('\n')
 }
 
