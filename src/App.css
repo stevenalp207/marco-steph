@@ -513,9 +513,9 @@
 
 /* Individual adjustments so we can fine-tune each problematic photo */
 .split-media .slider-image.shift-g1 { object-position: center 20%; }
+.split-media .slider-image.shift-g8 { object-position: center 1%; }
 .split-media .slider-image.shift-g9 { object-position: center 20%; }
 .split-media .slider-image.shift-g10 { object-position: center 20%; }
-.split-media .slider-image.shift-g11 { object-position: center 20%; }
 
 /* Slider controls */
 .slider-control {
@@ -1649,6 +1649,11 @@ img, picture, video {
 
 	.wedding-nav a {
 		font-size: 0.65rem;
+	}
+
+	/* En móviles, bajar el punto focal de la foto 8 para evitar recortes */
+	.split-media .slider-image.shift-g8 {
+		object-position: center 5%;
 	}
 }
 
