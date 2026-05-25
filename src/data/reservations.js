@@ -67,7 +67,6 @@ export const guestReservations = [
   { reservation: 'MRC-1065', name: 'Alejandro Aviles', passes: 1 },
   { reservation: 'MRC-1066', name: 'Jonathan Gamboa', passes: 1 },
   { reservation: 'MRC-1067', name: 'Rene Gonzalez', passes: 1 }
-
 ]
 
 export function normalizeText(value = '') {

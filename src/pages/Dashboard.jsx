@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import './Dashboard.css'
 import { guestReservations, makeReservationKey } from '../data/reservations'
 import { getRsvpResponses } from '../lib/supabaseClient'
+import { jsPDF } from 'jspdf'
+import 'jspdf-autotable'
 
 function StatusIcon({ status }) {
   switch (status) {
@@ -54,6 +56,8 @@ function buildWhatsappMessage(row) {
     '',
     '¡Estás invitad@ a celebrar la boda de Steph & Marco!',
     'La celebración será el *21 de noviembre* y nos haría muchísima ilusión contar contigo en este día tan especial.',
+    '',
+    'La fecha límite para confirmar asistencia es el *1 de agosto*.',
     '',
     'En la página web encontrarás toda la información importante: hospedaje, mesa de regalos, dress code y, lo más importante, la confirmación de asistencia.',
     '',
@@ -155,6 +159,28 @@ export default function Dashboard() {
     return { total, accepted, declined, pending }
   }, [rows])
 
+  function downloadPdf() {
+    const doc = new jsPDF()
+
+    const head = [['Número de reserva', 'Nombre', 'Teléfono']]
+    const body = rows.map((r) => [r.reservation, r.name, r.contactPhone ?? ''])
+
+    doc.setFontSize(12)
+    doc.text('Lista de reservaciones', 14, 16)
+
+    // @ts-ignore - autoTable attaches to jsPDF instance
+    doc.autoTable({
+      startY: 20,
+      head: head,
+      body: body,
+      styles: { fontSize: 10 },
+      headStyles: { fillColor: [40, 40, 40] },
+      margin: { left: 14, right: 14 }
+    })
+
+    doc.save('reservaciones.pdf')
+  }
+
   return (
     <main className="dashboard-page">
       <section className="dashboard-shell">
@@ -164,9 +190,14 @@ export default function Dashboard() {
             <h1>Dashboard de Reservaciones</h1>
             <p className="dashboard-subtitle">Muestra quiénes ya aceptaron, quiénes no y quiénes siguen pendientes.</p>
           </div>
-          <Link to="/" className="dashboard-back-link">
-            Volver a la invitación
-          </Link>
+          <div className="dashboard-header-actions">
+            <button className="pdf-download-button" onClick={downloadPdf}>
+              Descargar PDF
+            </button>
+            <Link to="/" className="dashboard-back-link">
+              Volver a la invitación
+            </Link>
+          </div>
         </header>
 
         <div className="dashboard-stats">
