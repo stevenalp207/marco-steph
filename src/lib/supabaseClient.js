@@ -27,6 +27,20 @@ export async function saveRsvpResponse(payload) {
   }
 }
 
+export async function recordKeepalivePing(source = 'dashboard') {
+  if (!supabase) {
+    throw new Error('Supabase no esta configurado.')
+  }
+
+  const { error } = await supabase
+    .from('keepalive_pings')
+    .insert([{ source }])
+
+  if (error) {
+    throw error
+  }
+}
+
 export async function getRsvpResponses() {
   if (!supabase) {
     throw new Error('Supabase no esta configurado.')

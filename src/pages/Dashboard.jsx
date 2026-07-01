@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import './Dashboard.css'
 import { guestReservations, makeReservationKey } from '../data/reservations'
-import { getRsvpResponses } from '../lib/supabaseClient'
+import { getRsvpResponses, recordKeepalivePing } from '../lib/supabaseClient'
 import { jsPDF } from 'jspdf'
 import 'jspdf-autotable'
 
@@ -96,6 +96,9 @@ export default function Dashboard() {
   const [responses, setResponses] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [errorMessage, setErrorMessage] = useState('')
+  const [isKeepingAlive, setIsKeepingAlive] = useState(false)
+  const [keepaliveMessage, setKeepaliveMessage] = useState('')
+  const [keepaliveError, setKeepaliveError] = useState('')
 
   useEffect(() => {
     async function loadResponses() {
@@ -105,7 +108,7 @@ export default function Dashboard() {
       try {
         const data = await getRsvpResponses()
         setResponses(data)
-      } catch (error) {
+      } catch {
         setErrorMessage('No se pudo cargar el dashboard. Verifica las políticas de Supabase.')
       } finally {
         setIsLoading(false)
@@ -114,6 +117,21 @@ export default function Dashboard() {
 
     loadResponses()
   }, [])
+
+  async function handleKeepalivePing() {
+    setIsKeepingAlive(true)
+    setKeepaliveMessage('')
+    setKeepaliveError('')
+
+    try {
+      await recordKeepalivePing('dashboard-manual')
+      setKeepaliveMessage('Se envió un ping de mantenimiento a la base de datos.')
+    } catch {
+      setKeepaliveError('No se pudo enviar el ping. Revisa que la tabla keepalive_pings exista y tenga permiso de inserción.')
+    } finally {
+      setIsKeepingAlive(false)
+    }
+  }
 
   const rows = useMemo(() => {
     const responseMap = new Map(
@@ -191,6 +209,9 @@ export default function Dashboard() {
             <p className="dashboard-subtitle">Muestra quiénes ya aceptaron, quiénes no y quiénes siguen pendientes.</p>
           </div>
           <div className="dashboard-header-actions">
+            <button className="keepalive-button" onClick={handleKeepalivePing} disabled={isKeepingAlive}>
+              {isKeepingAlive ? 'Enviando...' : 'Mantener activa la BD'}
+            </button>
             <button className="pdf-download-button" onClick={downloadPdf}>
               Descargar PDF
             </button>
@@ -199,6 +220,9 @@ export default function Dashboard() {
             </Link>
           </div>
         </header>
+
+        {keepaliveMessage ? <p className="dashboard-message">{keepaliveMessage}</p> : null}
+        {keepaliveError ? <p className="dashboard-error">{keepaliveError}</p> : null}
 
         <div className="dashboard-stats">
           <article>
