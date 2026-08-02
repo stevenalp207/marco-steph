@@ -65,9 +65,8 @@ export const guestReservations = [
   { reservation: 'MRC-1063', name: 'Mauricio Suarez', passes: 2, contactPhone: '+573044990194' },
   { reservation: 'MRC-1064', name: 'Francisco Mateos', passes: 2, contactPhone: '+529931084114' },
   { reservation: 'MRC-1065', name: 'Jennifer Muñoz', passes: 2, contactPhone: '+50689602549' },
-  // { reservation: 'MRC-1065', name: 'Alejandro Aviles', passes: 1 },
-  // { reservation: 'MRC-1066', name: 'Jonathan Gamboa', passes: 1 },
-  // { reservation: 'MRC-1067', name: 'Rene Gonzalez', passes: 1 }
+  { reservation: 'MRC-1066', name: 'Santiago Salcedo', passes: 1, contactPhone: '+50686636020' },
+  { reservation: 'MRC-1067', name: 'Estuardo Chang', passes: 1, contactPhone: '+50689288596' },
 ]
 
 export function normalizeText(value = '') {
