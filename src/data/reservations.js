@@ -14,7 +14,7 @@ export const guestReservations = [
   { reservation: 'MRC-1013', name: 'Carmen Mora Moreno', passes: 1, contactPhone: '+524423616404' },
   { reservation: 'MRC-1014', name: 'Teresa Mora Moreno', passes: 1, contactPhone: '+524426774244' },
   { reservation: 'MRC-1015', name: 'Lourdes Mora Moreno', passes: 1, contactPhone: '+524425780980' },
-  { reservation: 'MRC-1016', name: 'Veronica Mora Moreno', passes: 1, contactPhone: '+524422507116' },
+  { reservation: 'MRC-1016', name: 'Veronica Mora Moreno', passes: 2, contactPhone: '+524422507116' },
   { reservation: 'MRC-1017', name: 'Gerardo Mora Moreno', passes: 1, contactPhone: '+524423513579' },
   { reservation: 'MRC-1018', name: 'Elena Mora Moreno y Esposo', passes: 2, contactPhone: '+524421430358' },
   { reservation: 'MRC-1019', name: 'Cynthia Fierro', passes: 2, contactPhone: '+524421120022' },
@@ -59,7 +59,7 @@ export const guestReservations = [
   { reservation: 'MRC-1057', name: 'Oscar Orcasitas', passes: 2, contactPhone: '+573182457072' },
   { reservation: 'MRC-1058', name: 'Jose Luis Alvarez', passes: 1, contactPhone: '+528122022591' },
   { reservation: 'MRC-1059', name: 'Juan Villasana', passes: 1, contactPhone: '+17136739963' },
-  { reservation: 'MRC-1060', name: 'Marco Cascante', passes: 1, contactPhone: '+50686146166' },
+  { reservation: 'MRC-1060', name: 'Marco Cascante', passes: 2, contactPhone: '+50686146166' },
   { reservation: 'MRC-1061', name: 'Francisco Castro', passes: 1, contactPhone: '+50671882671' },
   { reservation: 'MRC-1062', name: 'Daniel Leon', passes: 1, contactPhone: '+50660317500' },
   { reservation: 'MRC-1063', name: 'Mauricio Suarez', passes: 2, contactPhone: '+573044990194' },
@@ -68,7 +68,10 @@ export const guestReservations = [
   { reservation: 'MRC-1066', name: 'Santiago Salcedo', passes: 1, contactPhone: '+50686636020' },
   { reservation: 'MRC-1067', name: 'Estuardo Chang', passes: 1, contactPhone: '+50689288596' },
   { reservation: 'MRC-1068', name: 'Stephanie Araya', passes: 1, contactPhone: '+50683524149' },
-  { reservation: 'test', name: 'test', passes: 1, contactPhone: '' },
+  { reservation: 'MRC-1069', name: 'Alejandro Lopez', passes: 2, contactPhone: '+524425942010' },
+  { reservation: 'MRC-1070', name: 'Daniel Hernández', passes: 2, contactPhone: '+525538861673' },
+  { reservation: 'MRC-1071', name: 'Yatzhira Camacho', passes: 2, contactPhone: '+525521064833' },
+  { reservation: 'MRC-1072', name: 'Mexitli Bernal Torres', passes: 2, contactPhone: '+529381714697' },
 ]
 
 export function normalizeText(value = '') {
