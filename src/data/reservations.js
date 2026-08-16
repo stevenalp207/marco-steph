@@ -72,6 +72,7 @@ export const guestReservations = [
   { reservation: 'MRC-1070', name: 'Daniel Hernández', passes: 2, contactPhone: '+525538861673' },
   { reservation: 'MRC-1071', name: 'Yatzhira Camacho', passes: 2, contactPhone: '+525521064833' },
   { reservation: 'MRC-1072', name: 'Mexitli Bernal Torres', passes: 2, contactPhone: '+529381714697' },
+  { reservation: 'MRC-1073', name: 'Valeria Hidalgo', passes: 1, contactPhone: '+50683684495' },
 ]
 
 export function normalizeText(value = '') {
