@@ -34,7 +34,6 @@ export const guestReservations = [
   { reservation: 'MRC-1033', name: 'Ericka Ruiz', passes: 2, contactPhone: '+527821123794' },
   { reservation: 'MRC-1034', name: 'Lourdes Duran', passes: 2, contactPhone: '+525539349822' },
   { reservation: 'MRC-1035', name: 'Jorge Espinoza', passes: 2, contactPhone: '+50660491205' },
-
   { reservation: 'MRC-1036', name: 'Kattia Gamboa', passes: 1 },
   { reservation: 'MRC-1037', name: 'Alexander Alpizar', passes: 1 },
   { reservation: 'MRC-1038', name: 'Steven Alpizar', passes: 1 },
@@ -80,6 +79,7 @@ export const guestReservations = [
   { reservation: 'MRC-1078', name: 'Carlos Rodriguez', passes: 2, contactPhone: '+527221597031' },
   { reservation: 'MRC-1079', name: 'Luis Aaron Urueta', passes: 2, contactPhone: '+528119889818' },
   { reservation: 'MRC-1080', name: 'Gio Gomez', passes: 2, contactPhone: '+529933115504' },
+  { reservation: 'MRC-1081', name: 'Francisco Torres', passes: 2, contactPhone: '+525611872976' },
 ]
 
 export function normalizeText(value = '') {
