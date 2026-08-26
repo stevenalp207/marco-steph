@@ -32,7 +32,7 @@ export const guestReservations = [
   { reservation: 'MRC-1031', name: 'Oliver Rodriguez', passes: 2, contactPhone: '+528180202373' },
   { reservation: 'MRC-1032', name: 'Braulio Hernandez', passes: 2, contactPhone: '+529212650530' },
   { reservation: 'MRC-1033', name: 'Ericka Ruiz', passes: 2, contactPhone: '+527821123794' },
-  { reservation: 'MRC-1034', name: 'Lourdes Duran', passes: 2, contactPhone: '+525528884821' },
+  { reservation: 'MRC-1034', name: 'Lourdes Duran', passes: 2, contactPhone: '+525539349822' },
   { reservation: 'MRC-1035', name: 'Jorge Espinoza', passes: 2, contactPhone: '+50660491205' },
 
   { reservation: 'MRC-1036', name: 'Kattia Gamboa', passes: 1 },
@@ -73,6 +73,13 @@ export const guestReservations = [
   { reservation: 'MRC-1071', name: 'Yatzhira Camacho', passes: 2, contactPhone: '+525521064833' },
   { reservation: 'MRC-1072', name: 'Mexitli Bernal Torres', passes: 2, contactPhone: '+529381714697' },
   { reservation: 'MRC-1073', name: 'Valeria Hidalgo', passes: 1, contactPhone: '+50683684495' },
+  { reservation: 'MRC-1074', name: 'Adriana Santiago', passes: 2, contactPhone: '+525574771324' },
+  { reservation: 'MRC-1075', name: 'Gabriela Dominguez', passes: 2, contactPhone: '+525580744990' },
+  { reservation: 'MRC-1076', name: 'Priscila Ahumada', passes: 2, contactPhone: '+525585321258' },
+  { reservation: 'MRC-1077', name: 'Susana Gonzalez', passes: 2, contactPhone: '+525521777156' },
+  { reservation: 'MRC-1078', name: 'Carlos Rodriguez', passes: 2, contactPhone: '+527221597031' },
+  { reservation: 'MRC-1079', name: 'Luis Aaron Urueta', passes: 2, contactPhone: '+528119889818' },
+  { reservation: 'MRC-1080', name: 'Gio Gomez', passes: 2, contactPhone: '+529933115504' },
 ]
 
 export function normalizeText(value = '') {
